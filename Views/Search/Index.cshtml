@@ -1,0 +1,301 @@
+@model ProjectManagementSystem.ViewModels.TaskSearchViewModel
+@{
+    ViewData["Title"] = "Tìm kiếm nâng cao";
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4">Tìm kiếm và lọc nâng cao</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="searchForm" method="get" action="@Url.Action("Index", "Search")" class="mb-0">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." 
+                                   name="SearchTerm" value="@Model.SearchTerm">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i> Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button type="button" class="btn btn-outline-secondary" 
+                                data-bs-toggle="collapse" data-bs-target="#advancedSearch">
+                            <i class="fas fa-sliders-h"></i> Bộ lọc nâng cao
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="collapse mt-3" id="advancedSearch">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Dự án</label>
+                            <select class="form-select" name="ProjectId">
+                                <option value="">-- Tất cả dự án --</option>
+                                @foreach (var project in Model.AvailableProjects)
+                                {
+                                    <option value="@project.Id" selected="@(Model.ProjectId == project.Id)">
+                                        @project.Name
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Người phụ trách</label>
+                            <select class="form-select" name="AssignedToId">
+                                <option value="">-- Tất cả --</option>
+                                @foreach (var user in Model.AvailableUsers)
+                                {
+                                    <option value="@user.Id" selected="@(Model.AssignedToId == user.Id)">
+                                        @($"{user.FirstName} {user.LastName}")
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Trạng thái</label>
+                            <select class="form-select" name="Status">
+                                <option value="">-- Tất cả --</option>
+                                <option value="@((int)ProjectTaskStatus.NotStarted)" selected="@(Model.Status == ProjectTaskStatus.NotStarted)">Chưa bắt đầu</option>
+                                <option value="@((int)ProjectTaskStatus.InProgress)" selected="@(Model.Status == ProjectTaskStatus.InProgress)">Đang thực hiện</option>
+                                <option value="@((int)ProjectTaskStatus.Completed)" selected="@(Model.Status == ProjectTaskStatus.Completed)">Hoàn thành</option>
+                                <option value="@((int)ProjectTaskStatus.OnHold)" selected="@(Model.Status == ProjectTaskStatus.OnHold)">Tạm dừng</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Độ ưu tiên</label>
+                            <select class="form-select" name="Priority">
+                                <option value="">-- Tất cả --</option>
+                                <option value="@((int)Priority.Low)" selected="@(Model.Priority == Priority.Low)">Thấp</option>
+                                <option value="@((int)Priority.Medium)" selected="@(Model.Priority == Priority.Medium)">Trung bình</option>
+                                <option value="@((int)Priority.High)" selected="@(Model.Priority == Priority.High)">Cao</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Từ ngày</label>
+                            <input type="date" class="form-control" name="StartDate" 
+                                   value="@(Model.StartDate?.ToString("yyyy-MM-dd"))">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Đến ngày</label>
+                            <input type="date" class="form-control" name="EndDate" 
+                                   value="@(Model.EndDate?.ToString("yyyy-MM-dd"))">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Sắp xếp theo</label>
+                            <select class="form-select" name="SortBy">
+                                <option value="created" selected="@(Model.SortBy == "created")">Ngày tạo</option>
+                                <option value="title" selected="@(Model.SortBy == "title")">Tiêu đề</option>
+                                <option value="priority" selected="@(Model.SortBy == "priority")">Độ ưu tiên</option>
+                                <option value="status" selected="@(Model.SortBy == "status")">Trạng thái</option>
+                                <option value="deadline" selected="@(Model.SortBy == "deadline")">Deadline</option>
+                                <option value="project" selected="@(Model.SortBy == "project")">Dự án</option>
+                                <option value="assignedto" selected="@(Model.SortBy == "assignedto")">Người phụ trách</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Thứ tự</label>
+                            <div class="d-flex">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="radio" name="SortAscending" 
+                                           id="sortAsc" value="true" checked="@Model.SortAscending">
+                                    <label class="form-check-label" for="sortAsc">Tăng dần</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="SortAscending" 
+                                           id="sortDesc" value="false" checked="@(!Model.SortAscending)">
+                                    <label class="form-check-label" for="sortDesc">Giảm dần</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 text-end">
+                            <a href="@Url.Action("Index", "Search")" class="btn btn-outline-secondary">
+                                <i class="fas fa-sync"></i> Đặt lại
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter"></i> Áp dụng bộ lọc
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Kết quả tìm kiếm</h5>
+            <div>
+                <span class="text-muted">Hiển thị @Model.Tasks.Count trên @Model.TotalTasks kết quả</span>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (Model.Tasks.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tiêu đề</th>
+                                <th>Dự án</th>
+                                <th>Trạng thái</th>
+                                <th>Ưu tiên</th>
+                                <th>Người phụ trách</th>
+                                <th>Deadline</th>
+                                <th>Ngày tạo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var task in Model.Tasks)
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-controller="Task" asp-action="Details" asp-route-id="@task.Id">
+                                            @task.Title
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a asp-controller="Project" asp-action="Details" asp-route-id="@task.ProjectId">
+                                            @task.Project.Name
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(task.Status switch {
+                                            ProjectTaskStatus.NotStarted => "bg-secondary",
+                                            ProjectTaskStatus.InProgress => "bg-primary",
+                                            ProjectTaskStatus.Completed => "bg-success",
+                                            ProjectTaskStatus.OnHold => "bg-warning",
+                                            _ => "bg-secondary"
+                                        })">
+                                            @task.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(task.Priority switch {
+                                            Priority.Low => "bg-info",
+                                            Priority.Medium => "bg-warning",
+                                            Priority.High => "bg-danger",
+                                            _ => "bg-secondary"
+                                        })">
+                                            @task.Priority
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (task.AssignedTo != null)
+                                        {
+                                            @($"{task.AssignedTo.FirstName} {task.AssignedTo.LastName}")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chưa phân công</span>
+                                        }
+                                    </td>
+                                    <td>@task.Deadline.ToString("dd/MM/yyyy")</td>
+                                    <td>@task.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="d-flex justify-content-center mt-4">
+                        <nav>
+                            <ul class="pagination">
+                                @if (Model.Page > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)" onclick="navigateToPage(1)">
+                                            <i class="fas fa-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)" onclick="navigateToPage(@(Model.Page - 1))">
+                                            <i class="fas fa-angle-left"></i>
+                                        </a>
+                                    </li>
+                                }
+                                
+                                @{
+                                    int startPage = Math.Max(1, Model.Page - 2);
+                                    int endPage = Math.Min(Model.TotalPages, startPage + 4);
+                                    startPage = Math.Max(1, endPage - 4);
+                                }
+                                
+                                @for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                                        <a class="page-link" href="javascript:void(0)" onclick="navigateToPage(@i)">@i</a>
+                                    </li>
+                                }
+                                
+                                @if (Model.Page < Model.TotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)" onclick="navigateToPage(@(Model.Page + 1))">
+                                            <i class="fas fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:void(0)" onclick="navigateToPage(@Model.TotalPages)">
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>Không tìm thấy kết quả nào</h4>
+                    <p class="text-muted">Hãy thử thay đổi từ khóa tìm kiếm hoặc điều chỉnh các bộ lọc.</p>
+                    <a href="@Url.Action("Index", "Search")" class="btn btn-outline-primary">
+                        <i class="fas fa-sync"></i> Đặt lại tìm kiếm
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto open advanced search if any filters are applied
+            if (
+                @((!string.IsNullOrEmpty(Model.SearchTerm) || 
+                  Model.ProjectId.HasValue || 
+                  !string.IsNullOrEmpty(Model.AssignedToId) || 
+                  Model.Status.HasValue || 
+                  Model.Priority.HasValue || 
+                  Model.StartDate.HasValue || 
+                  Model.EndDate.HasValue || 
+                  !string.IsNullOrEmpty(Model.SortBy) && Model.SortBy != "created" || 
+                  !Model.SortAscending).ToString().ToLower())
+            ) {
+                $('#advancedSearch').collapse('show');
+            }
+        });
+        
+        function navigateToPage(page) {
+            // Clone current form values
+            const form = $('#searchForm');
+            const currentPageInput = form.find('input[name="Page"]');
+            
+            // Add or update page input
+            if (currentPageInput.length) {
+                currentPageInput.val(page);
+            } else {
+                form.append(`<input type="hidden" name="Page" value="${page}">`);
+            }
+            
+            form.submit();
+        }
+    </script>
+} 

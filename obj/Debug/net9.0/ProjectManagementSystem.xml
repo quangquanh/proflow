@@ -1,0 +1,268 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProjectManagementSystem</name>
+    </assembly>
+    <members>
+        <member name="M:ProjectManagementSystem.Controllers.API.AuthController.Login(ProjectManagementSystem.Models.API.LoginModel)">
+            <summary>
+            Đăng nhập và lấy token JWT
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.AuthController.Register(ProjectManagementSystem.Models.API.RegisterModel)">
+            <summary>
+            Đăng ký tài khoản mới
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.CommentsController.GetTaskComments(System.Int32)">
+            <summary>
+            Lấy tất cả bình luận của một task
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.CommentsController.CreateComment(System.Int32,ProjectManagementSystem.Models.TaskComment)">
+            <summary>
+            Tạo bình luận mới cho task
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.CommentsController.DeleteComment(System.Int32)">
+            <summary>
+            Xóa bình luận
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.CommentsController.Test">
+            <summary>
+            Kiểm tra API controller hoạt động
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.NotificationsController.GetNotifications(System.Boolean)">
+            <summary>
+            Lấy tất cả thông báo của người dùng hiện tại
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.NotificationsController.MarkAsRead(System.Int32)">
+            <summary>
+            Đánh dấu thông báo đã đọc
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.NotificationsController.MarkAllAsRead">
+            <summary>
+            Đánh dấu tất cả thông báo là đã đọc
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.NotificationsController.DeleteNotification(System.Int32)">
+            <summary>
+            Xóa một thông báo
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.NotificationsController.GetUnreadCount">
+            <summary>
+            Lấy số lượng thông báo chưa đọc
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.NotificationsController.Test">
+            <summary>
+            Kiểm tra API controller hoạt động
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.ProjectsController.GetProjects">
+            <summary>
+            Lấy danh sách dự án
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.ProjectsController.GetProject(System.Int32)">
+            <summary>
+            Lấy thông tin chi tiết dự án
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.ProjectsController.CreateProject(ProjectManagementSystem.Models.Project)">
+            <summary>
+            Tạo dự án mới
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.ProjectsController.UpdateProject(System.Int32,ProjectManagementSystem.Models.Project)">
+            <summary>
+            Cập nhật dự án
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.ProjectsController.DeleteProject(System.Int32)">
+            <summary>
+            Xóa dự án
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.ProjectsController.AddMember(System.Int32,ProjectManagementSystem.Models.ProjectMember)">
+            <summary>
+            Thêm thành viên vào dự án
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.ProjectsController.RemoveMember(System.Int32,System.String)">
+            <summary>
+            Xóa thành viên khỏi dự án
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TasksController.GetTasks(System.Nullable{System.Int32})">
+            <summary>
+            Lấy danh sách task, có thể lọc theo project
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TasksController.GetTask(System.Int32)">
+            <summary>
+            Lấy thông tin chi tiết task
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TasksController.CreateTask(ProjectManagementSystem.Models.ProjectTask)">
+            <summary>
+            Tạo task mới
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TasksController.UpdateTask(System.Int32,ProjectManagementSystem.Models.ProjectTask)">
+            <summary>
+            Cập nhật task
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TasksController.DeleteTask(System.Int32)">
+            <summary>
+            Xóa task
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TasksController.GetMyTasks">
+            <summary>
+            Lấy danh sách task của người dùng hiện tại
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TeamsController.GetTeams">
+            <summary>
+            Lấy danh sách tất cả đội nhóm
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TeamsController.GetTeam(System.Int32)">
+            <summary>
+            Lấy thông tin chi tiết đội nhóm
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TeamsController.CreateTeam(ProjectManagementSystem.Models.Team)">
+            <summary>
+            Tạo đội nhóm mới
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TeamsController.UpdateTeam(System.Int32,ProjectManagementSystem.Models.Team)">
+            <summary>
+            Cập nhật thông tin đội nhóm
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TeamsController.DeleteTeam(System.Int32)">
+            <summary>
+            Xóa đội nhóm
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TeamsController.AddMember(System.Int32,ProjectManagementSystem.Models.TeamMember)">
+            <summary>
+            Thêm thành viên vào đội nhóm
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TeamsController.UpdateMemberRole(System.Int32,System.String,ProjectManagementSystem.Models.TeamRole)">
+            <summary>
+            Cập nhật vai trò thành viên trong đội nhóm
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TeamsController.RemoveMember(System.Int32,System.String)">
+            <summary>
+            Xóa thành viên khỏi đội nhóm
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.TeamsController.Test">
+            <summary>
+            Kiểm tra API controller hoạt động
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.UsersController.GetUsers">
+            <summary>
+            Lấy danh sách người dùng
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.UsersController.GetUser(System.String)">
+            <summary>
+            Lấy thông tin chi tiết người dùng
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.UsersController.GetCurrentUser">
+            <summary>
+            Lấy thông tin người dùng hiện tại
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.UsersController.UpdateUser(System.String,ProjectManagementSystem.Models.ApplicationUser)">
+            <summary>
+            Cập nhật thông tin người dùng
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.UsersController.ChangePassword(ProjectManagementSystem.Controllers.API.ChangePasswordModel)">
+            <summary>
+            Đổi mật khẩu
+            </summary>
+        </member>
+        <member name="M:ProjectManagementSystem.Controllers.API.UsersController.Test">
+            <summary>
+            Kiểm tra API controller hoạt động
+            </summary>
+        </member>
+        <member name="T:ProjectManagementSystem.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ProjectManagementSystem.Migrations.AddUserRoleEnum">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddUserRoleEnum.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddUserRoleEnum.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddUserRoleEnum.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ProjectManagementSystem.Migrations.AddProjectTasks">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddProjectTasks.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddProjectTasks.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddProjectTasks.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ProjectManagementSystem.Migrations.AddTeams">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddTeams.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddTeams.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddTeams.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:ProjectManagementSystem.Migrations.AddTaskCommentsTable">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddTaskCommentsTable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddTaskCommentsTable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ProjectManagementSystem.Migrations.AddTaskCommentsTable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

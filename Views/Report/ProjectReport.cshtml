@@ -1,0 +1,205 @@
+@model ProjectManagementSystem.ViewModels.ProjectReportViewModel
+@{
+    ViewData["Title"] = $"Báo cáo dự án - {Model.Project.Name}";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Báo cáo dự án: @Model.Project.Name</h1>
+        <div>
+            <a asp-controller="Project" asp-action="Details" asp-route-id="@Model.Project.Id" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> Quay lại dự án
+            </a>
+            <a asp-controller="Report" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-chart-bar"></i> Tất cả báo cáo
+            </a>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Chi tiết dự án</h5>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Trạng thái:</th>
+                            <td>
+                                <span class="badge @(Model.Project.Status switch {
+                                    ProjectStatus.Pending => "bg-secondary",
+                                    ProjectStatus.InProgress => "bg-primary",
+                                    ProjectStatus.Completed => "bg-success",
+                                    ProjectStatus.OnHold => "bg-warning",
+                                    ProjectStatus.Cancelled => "bg-danger",
+                                    _ => "bg-secondary"
+                                })">
+                                    @Model.Project.Status
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Ngày bắt đầu:</th>
+                            <td>@(Model.Project.StartDate.HasValue ? Model.Project.StartDate.Value.ToString("dd/MM/yyyy") : "Chưa đặt")</td>
+                        </tr>
+                        <tr>
+                            <th>Ngày kết thúc:</th>
+                            <td>@(Model.Project.EndDate.HasValue ? Model.Project.EndDate.Value.ToString("dd/MM/yyyy") : "Chưa đặt")</td>
+                        </tr>
+                        <tr>
+                            <th>Tổng số công việc:</th>
+                            <td>@Model.Project.Tasks.Count()</td>
+                        </tr>
+                        <tr>
+                            <th>Tiến độ:</th>
+                            <td>
+                                @{
+                                    var progress = Model.Project.Tasks.Any() 
+                                        ? (int)((double)Model.Project.Tasks.Count(t => t.Status == ProjectTaskStatus.Completed) / Model.Project.Tasks.Count() * 100) 
+                                        : 0;
+                                }
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar" role="progressbar" 
+                                         style="width: @progress%;" 
+                                         aria-valuenow="@progress" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100"></div>
+                                </div>
+                                <small class="text-muted">@progress% Hoàn thành</small>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Xu hướng hoàn thành công việc theo tuần</h5>
+                    <canvas id="weeklyCompletionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Công việc theo trạng thái</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="taskStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Công việc theo độ ưu tiên</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="taskPriorityChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Công việc theo người dùng</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="tasksPerUserChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Danh sách công việc</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tiêu đề</th>
+                                    <th>Trạng thái</th>
+                                    <th>Độ ưu tiên</th>
+                                    <th>Giao cho</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Hạn chót</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var task in Model.Project.Tasks.OrderBy(t => t.Status).ThenBy(t => t.Priority))
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-controller="Task" asp-action="Details" asp-route-id="@task.Id">
+                                                @task.Title
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span class="badge @(task.Status switch {
+                                                ProjectTaskStatus.NotStarted => "bg-secondary",
+                                                ProjectTaskStatus.InProgress => "bg-primary",
+                                                ProjectTaskStatus.Completed => "bg-success",
+                                                ProjectTaskStatus.OnHold => "bg-warning",
+                                                _ => "bg-secondary"
+                                            })">
+                                                @task.Status
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge @(task.Priority switch {
+                                                Priority.Low => "bg-info",
+                                                Priority.Medium => "bg-warning",
+                                                Priority.High => "bg-danger",
+                                                _ => "bg-secondary"
+                                            })">
+                                                @task.Priority
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @(task.AssignedTo != null ? $"{task.AssignedTo.FirstName} {task.AssignedTo.LastName}" : "Chưa giao")
+                                        </td>
+                                        <td>@task.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                        <td>@task.Deadline.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/charts.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Convert C# dictionaries to JavaScript objects
+            const statusData = [
+                { status: "Chưa bắt đầu", count: @Model.TasksByStatus["Not Started"] },
+                { status: "Đang thực hiện", count: @Model.TasksByStatus["In Progress"] },
+                { status: "Hoàn thành", count: @Model.TasksByStatus["Completed"] },
+                { status: "Tạm dừng", count: @Model.TasksByStatus["On Hold"] }
+            ];
+            
+            const priorityData = @Html.Raw(Json.Serialize(Model.TasksByPriority));
+            const userTasksData = @Html.Raw(Json.Serialize(Model.TasksPerUser));
+            const weeklyTrendData = @Html.Raw(Json.Serialize(Model.WeeklyCompletionTrend));
+            // Create charts
+            createTaskStatusChart('taskStatusChart', statusData);
+            createTaskPriorityChart('taskPriorityChart', priorityData);
+            createTasksPerUserChart('tasksPerUserChart', userTasksData);
+            createWeeklyCompletionChart('weeklyCompletionChart', weeklyTrendData);
+        });
+    </script>
+} 

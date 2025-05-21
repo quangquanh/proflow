@@ -1,0 +1,317 @@
+@model ProjectManagementSystem.ViewModels.TasksListViewModel
+@using ProjectManagementSystem.Models
+
+@{
+    ViewData["Title"] = $"{Model.ProjectName} - Bảng công việc";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-1">@Model.ProjectName</h1>
+            <p class="text-muted">Bảng công việc</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Create" asp-route-projectId="@Model.ProjectId" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Công việc mới
+            </a>
+            <a asp-action="Calendar" asp-route-projectId="@Model.ProjectId" class="btn btn-outline-secondary">
+                <i class="fas fa-calendar"></i> Xem lịch
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Not Started -->
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-secondary">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Chưa bắt đầu <span class="badge bg-light text-dark">@Model.NotStartedTasks.Count</span></h5>
+                </div>
+                <div class="card-body p-2 task-column" data-status="@((int)ProjectTaskStatus.NotStarted)">
+                    @foreach (var task in Model.NotStartedTasks)
+                    {
+                        <div class="card mb-2 task-card" data-task-id="@task.Id" data-status="@((int)task.Status)">
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1">
+                                    <a asp-action="Details" asp-route-id="@task.Id">@task.Title</a>
+                                </h6>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted">Hạn: @task.Deadline.ToString("dd/MM")</small>
+                                    @switch (task.Priority)
+                                    {
+                                        case Priority.High:
+                                            <span class="badge bg-danger">Cao</span>
+                                            break;
+                                        case Priority.Medium:
+                                            <span class="badge bg-warning text-dark">Trung bình</span>
+                                            break;
+                                        case Priority.Low:
+                                            <span class="badge bg-info">Thấp</span>
+                                            break;
+                                    }
+                                </div>
+                                @if (!string.IsNullOrEmpty(task.AssignedToName))
+                                {
+                                    <small class="d-block text-truncate">Giao cho: @task.AssignedToName</small>
+                                }
+                                <div class="mt-2 d-flex justify-content-between align-items-center">
+                                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <div>
+                                        @if (task.CommentCount > 0)
+                                        {
+                                            <span class="badge bg-secondary me-2" title="@task.CommentCount bình luận">
+                                                <i class="fas fa-comment"></i> @task.CommentCount
+                                            </span>
+                                        }
+                                        @if (task.HasAttachment)
+                                        {
+                                            <span class="text-primary">
+                                                <i class="fas fa-paperclip" title="Có tệp đính kèm"></i>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- In Progress -->
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Đang thực hiện <span class="badge bg-light text-dark">@Model.InProgressTasks.Count</span></h5>
+                </div>
+                <div class="card-body p-2 task-column" data-status="@((int)ProjectTaskStatus.InProgress)">
+                    @foreach (var task in Model.InProgressTasks)
+                    {
+                        <div class="card mb-2 task-card" data-task-id="@task.Id" data-status="@((int)task.Status)">
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1">
+                                    <a asp-action="Details" asp-route-id="@task.Id">@task.Title</a>
+                                </h6>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted">Hạn: @task.Deadline.ToString("dd/MM")</small>
+                                    @switch (task.Priority)
+                                    {
+                                        case Priority.High:
+                                            <span class="badge bg-danger">Cao</span>
+                                            break;
+                                        case Priority.Medium:
+                                            <span class="badge bg-warning text-dark">Trung bình</span>
+                                            break;
+                                        case Priority.Low:
+                                            <span class="badge bg-info">Thấp</span>
+                                            break;
+                                    }
+                                </div>
+                                @if (!string.IsNullOrEmpty(task.AssignedToName))
+                                {
+                                    <small class="d-block text-truncate">Giao cho: @task.AssignedToName</small>
+                                }
+                                <div class="mt-2 d-flex justify-content-between align-items-center">
+                                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <div>
+                                        @if (task.CommentCount > 0)
+                                        {
+                                            <span class="badge bg-secondary me-2" title="@task.CommentCount bình luận">
+                                                <i class="fas fa-comment"></i> @task.CommentCount
+                                            </span>
+                                        }
+                                        @if (task.HasAttachment)
+                                        {
+                                            <span class="text-primary">
+                                                <i class="fas fa-paperclip" title="Có tệp đính kèm"></i>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed -->
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Hoàn thành <span class="badge bg-light text-dark">@Model.CompletedTasks.Count</span></h5>
+                </div>
+                <div class="card-body p-2 task-column" data-status="@((int)ProjectTaskStatus.Completed)">
+                    @foreach (var task in Model.CompletedTasks)
+                    {
+                        <div class="card mb-2 task-card" data-task-id="@task.Id" data-status="@((int)task.Status)">
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1">
+                                    <a asp-action="Details" asp-route-id="@task.Id">@task.Title</a>
+                                </h6>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted">Hạn: @task.Deadline.ToString("dd/MM")</small>
+                                    @switch (task.Priority)
+                                    {
+                                        case Priority.High:
+                                            <span class="badge bg-danger">Cao</span>
+                                            break;
+                                        case Priority.Medium:
+                                            <span class="badge bg-warning text-dark">Trung bình</span>
+                                            break;
+                                        case Priority.Low:
+                                            <span class="badge bg-info">Thấp</span>
+                                            break;
+                                    }
+                                </div>
+                                @if (!string.IsNullOrEmpty(task.AssignedToName))
+                                {
+                                    <small class="d-block text-truncate">Giao cho: @task.AssignedToName</small>
+                                }
+                                <div class="mt-2 d-flex justify-content-between align-items-center">
+                                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <div>
+                                        @if (task.CommentCount > 0)
+                                        {
+                                            <span class="badge bg-secondary me-2" title="@task.CommentCount bình luận">
+                                                <i class="fas fa-comment"></i> @task.CommentCount
+                                            </span>
+                                        }
+                                        @if (task.HasAttachment)
+                                        {
+                                            <span class="text-primary">
+                                                <i class="fas fa-paperclip" title="Có tệp đính kèm"></i>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- On Hold -->
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Tạm dừng <span class="badge bg-light text-dark">@Model.OnHoldTasks.Count</span></h5>
+                </div>
+                <div class="card-body p-2 task-column" data-status="@((int)ProjectTaskStatus.OnHold)">
+                    @foreach (var task in Model.OnHoldTasks)
+                    {
+                        <div class="card mb-2 task-card" data-task-id="@task.Id" data-status="@((int)task.Status)">
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1">
+                                    <a asp-action="Details" asp-route-id="@task.Id">@task.Title</a>
+                                </h6>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted">Hạn: @task.Deadline.ToString("dd/MM")</small>
+                                    @switch (task.Priority)
+                                    {
+                                        case Priority.High:
+                                            <span class="badge bg-danger">Cao</span>
+                                            break;
+                                        case Priority.Medium:
+                                            <span class="badge bg-warning text-dark">Trung bình</span>
+                                            break;
+                                        case Priority.Low:
+                                            <span class="badge bg-info">Thấp</span>
+                                            break;
+                                    }
+                                </div>
+                                @if (!string.IsNullOrEmpty(task.AssignedToName))
+                                {
+                                    <small class="d-block text-truncate">Giao cho: @task.AssignedToName</small>
+                                }
+                                <div class="mt-2 d-flex justify-content-between align-items-center">
+                                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <div>
+                                        @if (task.CommentCount > 0)
+                                        {
+                                            <span class="badge bg-secondary me-2" title="@task.CommentCount bình luận">
+                                                <i class="fas fa-comment"></i> @task.CommentCount
+                                            </span>
+                                        }
+                                        @if (task.HasAttachment)
+                                        {
+                                            <span class="text-primary">
+                                                <i class="fas fa-paperclip" title="Có tệp đính kèm"></i>
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="updateStatusForm" asp-action="UpdateStatus" method="post">
+    <input type="hidden" id="taskId" name="TaskId" />
+    <input type="hidden" id="newStatus" name="NewStatus" />
+    @Html.AntiForgeryToken()
+</form>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Sortable for each column
+            document.querySelectorAll('.task-column').forEach(function (el) {
+                new Sortable(el, {
+                    group: 'tasks',
+                    animation: 150,
+                    onEnd: function (evt) {
+                        const taskId = evt.item.getAttribute('data-task-id');
+                        const newStatus = evt.to.getAttribute('data-status');
+                        const oldStatus = evt.item.getAttribute('data-status');
+                        
+                        if (newStatus !== oldStatus) {
+                            // Update the task status
+                            document.getElementById('taskId').value = taskId;
+                            document.getElementById('newStatus').value = newStatus;
+                            
+                            // Submit the form
+                            const form = document.getElementById('updateStatusForm');
+                            const formData = new FormData(form);
+                            
+                            fetch(form.action, {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Update the task card status
+                                    evt.item.setAttribute('data-status', newStatus);
+                                } else {
+                                    // If it fails, move the card back
+                                    alert(data.message || 'Không thể cập nhật trạng thái công việc');
+                                    location.reload();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+} 

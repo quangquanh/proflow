@@ -1,0 +1,128 @@
+@model ProjectManagementSystem.ViewModels.ReportViewModel
+@{
+    ViewData["Title"] = "Báo cáo & Thống kê";
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4">Báo cáo & Thống kê</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Công việc theo trạng thái</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="taskStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Công việc theo độ ưu tiên</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="taskPriorityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Công việc theo người dùng</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="tasksPerUserChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Xu hướng hoàn thành công việc theo tuần</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="weeklyCompletionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Xu hướng hoàn thành công việc theo tháng</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="monthlyCompletionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Loại báo cáo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Báo cáo dự án</h5>
+                                    <p class="card-text">Xem thống kê chi tiết cho từng dự án.</p>
+                                    <a asp-controller="Project" asp-action="Index" class="btn btn-primary">Chọn dự án</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Báo cáo người dùng</h5>
+                                    <p class="card-text">Xem thống kê công việc theo từng người dùng.</p>
+                                    <a asp-controller="Report" asp-action="UserReport" class="btn btn-primary">Xem báo cáo người dùng</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/charts.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Task status chart
+            $.get('@Url.Action("GetTasksData", "Report")', function(data) {
+                createTaskStatusChart('taskStatusChart', data);
+            });
+            
+            // Task priority chart
+            const priorityData = @Html.Raw(Json.Serialize(Model.TasksByPriority));
+            createTaskPriorityChart('taskPriorityChart', priorityData);
+            
+            // Tasks per user chart
+            const userTasksData = @Html.Raw(Json.Serialize(Model.TasksPerUser));
+            createTasksPerUserChart('tasksPerUserChart', userTasksData);
+            
+            // Weekly completion trend chart
+            const weeklyTrendData = @Html.Raw(Json.Serialize(Model.WeeklyCompletionTrend));
+            createWeeklyCompletionChart('weeklyCompletionChart', weeklyTrendData);
+            
+            // Monthly completion trend chart
+            const monthlyTrendData = @Html.Raw(Json.Serialize(Model.MonthlyCompletionTrend));
+            createMonthlyCompletionChart('monthlyCompletionChart', monthlyTrendData);
+        });
+    </script>
+} 

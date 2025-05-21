@@ -1,0 +1,43 @@
+@model ProjectManagementSystem.ViewModels.AddProjectMemberViewModel
+
+@{
+    ViewData["Title"] = "Add Project Member";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">@ViewData["Title"]</h2>
+                <form asp-action="Add" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="ProjectId" />
+                    
+                    <div class="mb-3">
+                        <label asp-for="UserEmail" class="form-label"></label>
+                        <select asp-for="UserEmail" asp-items="ViewBag.AvailableUsers" class="form-select">
+                            <option value="">-- Select User --</option>
+                        </select>
+                        <span asp-validation-for="UserEmail" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Role" class="form-label"></label>
+                        <select asp-for="Role" asp-items="Html.GetEnumSelectList<ProjectManagementSystem.Models.ProjectRole>()" class="form-select">
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Add Member</button>
+                        <a asp-action="Index" asp-route-projectId="@Model.ProjectId" class="btn btn-secondary">Back to Members</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

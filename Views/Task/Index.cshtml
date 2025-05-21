@@ -1,0 +1,177 @@
+@model IEnumerable<ProjectManagementSystem.Models.ProjectTask>
+
+@{
+    ViewData["Title"] = "Danh sách công việc";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>@ViewData["Title"]</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Tạo công việc mới
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Tiêu đề</th>
+                            <th>Dự án</th>
+                            <th>Trạng thái</th>
+                            <th>Độ ưu tiên</th>
+                            <th>Giao cho</th>
+                            <th>Hạn chót</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var task in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="task-status-indicator me-3 @(task.Status switch {
+                                            ProjectTaskStatus.NotStarted => "bg-secondary",
+                                            ProjectTaskStatus.InProgress => "bg-primary",
+                                            ProjectTaskStatus.Completed => "bg-success",
+                                            ProjectTaskStatus.OnHold => "bg-warning",
+                                            _ => "bg-secondary"
+                                        })"></div>
+                                        <div>
+                                            <h6 class="mb-0">@task.Title</h6>
+                                            <small class="text-muted">@task.Description</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-controller="Project" asp-action="Details" asp-route-id="@task.ProjectId" 
+                                       class="text-decoration-none">
+                                        @task.Project.Name
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge bg-@(task.Status switch {
+                                        ProjectTaskStatus.NotStarted => "secondary",
+                                        ProjectTaskStatus.InProgress => "primary",
+                                        ProjectTaskStatus.Completed => "success",
+                                        ProjectTaskStatus.OnHold => "warning",
+                                        _ => "secondary"
+                                    })">
+                                        @task.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-@(task.Priority switch {
+                                        Priority.High => "danger",
+                                        Priority.Medium => "warning",
+                                        Priority.Low => "info",
+                                        _ => "secondary"
+                                    })">
+                                        @task.Priority
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (task.AssignedTo != null)
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar me-2" title="@task.AssignedTo.FirstName @task.AssignedTo.LastName">
+                                                @task.AssignedTo.FirstName[0]@task.AssignedTo.LastName[0]
+                                            </div>
+                                            <span>@task.AssignedTo.FirstName @task.AssignedTo.LastName</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa giao</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="far fa-calendar-alt text-muted me-2"></i>
+                                        <span class="@(task.Deadline < DateTime.Now && task.Status != ProjectTaskStatus.Completed ? "text-danger" : "")">
+                                            @task.Deadline.ToString("dd/MM/yyyy")
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a asp-action="Details" asp-route-id="@task.Id" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@task.Id" 
+                                           class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                data-bs-toggle="modal" data-bs-target="#deleteModal@(task.Id)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteModal@(task.Id)" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Xác nhận xóa</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn xóa công việc này?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                    <form asp-action="Delete" asp-route-id="@task.Id" method="post">
+                                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .task-status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .table > :not(caption) > * > * {
+        padding: 1rem;
+    }
+
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+</style> 

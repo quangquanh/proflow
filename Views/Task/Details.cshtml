@@ -1,0 +1,219 @@
+@model ProjectManagementSystem.ViewModels.TaskViewModel
+@using ProjectManagementSystem.Models
+@using System.IO
+
+@{
+    ViewData["Title"] = "Chi tiết công việc";
+}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="card-title mb-1">@Model.Title</h2>
+                            <p class="text-muted mb-0">@Model.ProjectName</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            @switch (Model.Priority)
+                            {
+                                case Priority.High:
+                                    <span class="badge bg-danger">Cao</span>
+                                    break;
+                                case Priority.Medium:
+                                    <span class="badge bg-warning text-dark">Trung bình</span>
+                                    break;
+                                case Priority.Low:
+                                    <span class="badge bg-info">Thấp</span>
+                                    break;
+                            }
+                            
+                            @switch (Model.Status)
+                            {
+                                case ProjectTaskStatus.NotStarted:
+                                    <span class="badge bg-secondary">Chưa bắt đầu</span>
+                                    break;
+                                case ProjectTaskStatus.InProgress:
+                                    <span class="badge bg-primary">Đang thực hiện</span>
+                                    break;
+                                case ProjectTaskStatus.Completed:
+                                    <span class="badge bg-success">Hoàn thành</span>
+                                    break;
+                                case ProjectTaskStatus.OnHold:
+                                    <span class="badge bg-warning text-dark">Tạm dừng</span>
+                                    break;
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-8">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Mô tả</h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (string.IsNullOrEmpty(Model.Description))
+                                    {
+                                        <p class="text-muted">Không có mô tả</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="white-space: pre-line;">@Model.Description</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Thông tin công việc</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="text-muted d-block">Tạo bởi</label>
+                                        <span>@Model.CreatedByName</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="text-muted d-block">Giao cho</label>
+                                        <span>@(string.IsNullOrEmpty(Model.AssignedToName) ? "Chưa giao" : Model.AssignedToName)</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="text-muted d-block">Ngày tạo</label>
+                                        <span>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="text-muted d-block">Hạn chót</label>
+                                        <div class="d-flex align-items-center">
+                                            <span>@Model.Deadline.ToString("dd/MM/yyyy")</span>
+                                            @if (Model.Deadline < DateTime.Now && Model.Status != ProjectTaskStatus.Completed)
+                                            {
+                                                <span class="badge bg-danger ms-2">Quá hạn</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.HasAttachment)
+                    {
+                        <div class="card mt-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Tệp đính kèm</h5>
+                            </div>
+                            <div class="card-body">
+                                @{
+                                    string fileExtension = "";
+                                    string fileName = "";
+                                    if (!string.IsNullOrEmpty(Model.AttachmentPath))
+                                    {
+                                        fileExtension = System.IO.Path.GetExtension(Model.AttachmentPath)?.ToLower() ?? "";
+                                        fileName = System.IO.Path.GetFileName(Model.AttachmentPath) ?? "";
+                                    }
+                                    var isImage = new[] { ".jpg", ".jpeg", ".png", ".gif" }.Contains(fileExtension);
+                                    var isPdf = fileExtension == ".pdf";
+                                    var isText = new[] { ".txt", ".md", ".json", ".xml", ".html", ".css", ".js" }.Contains(fileExtension);
+                                }
+
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-file me-2"></i>
+                                    <span class="me-3">@fileName</span>
+                                    <a href="@Model.AttachmentPath" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-download"></i> Tải xuống
+                                    </a>
+                                </div>
+
+                                @if (isImage)
+                                {
+                                    <div class="preview-container">
+                                        <img src="@Model.AttachmentPath" class="img-fluid rounded" alt="Attachment preview" />
+                                    </div>
+                                }
+                                else if (isPdf)
+                                {
+                                    <div class="preview-container">
+                                        <iframe src="@Model.AttachmentPath" class="w-100" style="height: 500px; border: none;"></iframe>
+                                    </div>
+                                }
+                                else if (isText)
+                                {
+                                    <div class="preview-container">
+                                        <pre class="bg-light p-3 rounded"><code>@System.IO.File.ReadAllText(Model.AttachmentPath)</code></pre>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    
+                    <!-- Comments Section -->
+                    <div id="comments-container">
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Đang tải bình luận...</span>
+                            </div>
+                            <p class="mt-2">Đang tải bình luận...</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Chỉnh sửa
+                        </a>
+                        <a asp-action="Board" asp-route-projectId="@Model.ProjectId" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Quay lại bảng công việc
+                        </a>
+                        
+                        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="ms-auto">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa công việc này?');">
+                                <i class="fas fa-trash"></i> Xóa
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .preview-container {
+        max-height: 500px;
+        overflow: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+    }
+    
+    .card {
+        border: none;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    
+    .card-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+</style>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Load comments
+            loadComments();
+            
+            function loadComments() {
+                $.get('@Url.Action("GetComments", "Comment", new { taskId = Model.Id })', function(data) {
+                    $('#comments-container').html(data);
+                }).fail(function() {
+                    $('#comments-container').html('<div class="alert alert-danger">Không thể tải bình luận. Vui lòng thử làm mới trang.</div>');
+                });
+            }
+        });
+    </script>
+} 

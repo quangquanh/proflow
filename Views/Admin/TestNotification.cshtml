@@ -1,0 +1,120 @@
+@model List<ProjectManagementSystem.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "Gửi thông báo thử nghiệm";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Gửi thông báo hệ thống</h5>
+                </div>
+                <div class="card-body">
+                    <form id="testNotificationForm">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Người nhận</label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="recipientType" id="allUsers" value="all" checked>
+                                <label class="form-check-label" for="allUsers">
+                                    Tất cả người dùng (@Model.Count người)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="recipientType" id="specificUser" value="specific">
+                                <label class="form-check-label" for="specificUser">
+                                    Người dùng cụ thể
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="userSelectContainer" class="mb-4" style="display: none;">
+                            <label for="userId" class="form-label">Chọn người dùng</label>
+                            <select id="userId" name="userId" class="form-select">
+                                @foreach (var user in Model)
+                                {
+                                    <option value="@user.Id">@user.FirstName @user.LastName (@user.Email)</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="message" class="form-label fw-bold">Nội dung thông báo</label>
+                            <textarea id="message" name="message" class="form-control" rows="3" required 
+                                    placeholder="Nhập nội dung thông báo..."></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>Gửi thông báo
+                            </button>
+                            <span class="text-muted small">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <span id="recipientCount">Tất cả người dùng sẽ nhận được thông báo này</span>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Kết quả</h5>
+                </div>
+                <div class="card-body">
+                    <div id="results" class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Gửi thông báo để xem kết quả tại đây.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Handle recipient type change
+            $('input[name="recipientType"]').change(function() {
+                if ($(this).val() === 'specific') {
+                    $('#userSelectContainer').slideDown();
+                    $('#recipientCount').text('Chỉ một người dùng sẽ nhận được thông báo này');
+                } else {
+                    $('#userSelectContainer').slideUp();
+                    $('#recipientCount').text('Tất cả người dùng sẽ nhận được thông báo này');
+                }
+            });
+
+            // Handle form submission
+            $('#testNotificationForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var formData = $(this).serialize();
+                var recipientType = $('input[name="recipientType"]:checked').val();
+                
+                // Show loading state
+                $('#results').removeClass('alert-info alert-danger alert-success')
+                    .addClass('alert-info')
+                    .html('<div class="d-flex align-items-center"><div class="spinner-border spinner-border-sm me-2" role="status"></div>Đang gửi thông báo...</div>');
+                
+                $.ajax({
+                    url: '@Url.Action("SendTestNotification", "Notification")',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        $('#results').removeClass('alert-info alert-danger')
+                            .addClass('alert-success')
+                            .html('<i class="fas fa-check-circle me-2"></i><strong>Thành công!</strong> ' + response.message);
+                    },
+                    error: function(xhr) {
+                        $('#results').removeClass('alert-info alert-success')
+                            .addClass('alert-danger')
+                            .html('<i class="fas fa-exclamation-circle me-2"></i><strong>Lỗi!</strong> ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+} 

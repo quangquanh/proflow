@@ -1,0 +1,409 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<div class="container-fluid py-4">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-primary text-white border-0 shadow">
+                <div class="card-body p-5">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="display-5 fw-bold mb-3">Chào mừng đến với ProFlow</h1>
+                            <p class="lead mb-4">Tối ưu quy trình làm việc, tăng cường hợp tác và đạt thành công dự án với nền tảng quản lý toàn diện của chúng tôi.</p>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a asp-controller="Project" asp-action="Create" class="btn btn-light btn-lg px-4">
+                                    <i class="fas fa-plus me-2"></i>Tạo dự án mới
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="d-flex gap-3">
+                                    <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg px-4">
+                                        <i class="fas fa-user-plus me-2"></i>Bắt đầu ngay
+                                    </a>
+                                    <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg px-4">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-4 d-none d-md-block">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <!-- Quick Stats -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm hover-shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded-3">
+                                    <i class="fas fa-project-diagram text-primary fa-2x"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="text-muted mb-1">Dự án đang hoạt động</h6>
+                                <h3 class="mb-0 fw-bold">@(ViewBag.ActiveProjectsCount ?? 0)</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm hover-shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="bg-success bg-opacity-10 p-3 rounded-3">
+                                    <i class="fas fa-tasks text-success fa-2x"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="text-muted mb-1">Tổng số công việc</h6>
+                                <h3 class="mb-0 fw-bold">@(ViewBag.TotalTasksCount ?? 0)</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm hover-shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="bg-warning bg-opacity-10 p-3 rounded-3">
+                                    <i class="fas fa-users text-warning fa-2x"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="text-muted mb-1">Nhóm đang hoạt động</h6>
+                                <h3 class="mb-0 fw-bold">@(ViewBag.ActiveTeamsCount ?? 0)</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm hover-shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="bg-info bg-opacity-10 p-3 rounded-3">
+                                    <i class="fas fa-user-friends text-info fa-2x"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="text-muted mb-1">Thành viên nhóm</h6>
+                                <h3 class="mb-0 fw-bold">@(ViewBag.TotalMembersCount ?? 0)</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Projects -->
+        @if (ViewBag.RecentProjects != null && ((IEnumerable<dynamic>)ViewBag.RecentProjects).Any())
+        {
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent border-0 py-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 fw-bold">Dự án gần đây</h5>
+                                <a asp-controller="Project" asp-action="Index" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-list me-2"></i>Xem tất cả
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="border-0">Tên dự án</th>
+                                            <th class="border-0">Trạng thái</th>
+                                            <th class="border-0">Tiến độ</th>
+                                            <th class="border-0">Hạn chót</th>
+                                            <th class="border-0">Nhóm</th>
+                                            <th class="border-0">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var project in ViewBag.RecentProjects)
+                                        {
+                                            @if (project.IsMember)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-project-diagram text-primary me-3"></i>
+                                                            <span class="fw-medium">@project.Name</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-@(project.Status == "Active" ? "success" : "secondary") rounded-pill px-3 py-2">
+                                                            @project.Status
+                                                        </span>
+                                                    </td>
+                                                    <td style="width: 200px;">
+                                                        <div class="progress" style="height: 8px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar" 
+                                                                style="width: @project.Progress%;" 
+                                                                aria-valuenow="@project.Progress" 
+                                                                aria-valuemin="0" 
+                                                                aria-valuemax="100"></div>
+                                                        </div>
+                                                        <small class="text-muted mt-1 d-block">@project.Progress% Hoàn thành</small>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-muted">
+                                                            <i class="far fa-calendar-alt me-2"></i>
+                                                            @project.EndDate?.ToString("dd/MM/yyyy")
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="avatar-group">
+                                                                @if (project.TeamMembers != null)
+                                                                {
+                                                                    var memberList = ((IEnumerable<dynamic>)project.TeamMembers).ToList();
+                                                                    foreach (var member in memberList.Take(3))
+                                                                    {
+                                                                        <div class="avatar" title="@member.Name">
+                                                                            @member.Initials
+                                                                        </div>
+                                                                    }
+                                                                    if (memberList.Count > 3)
+                                                                    {
+                                                                        <div class="avatar">+@(memberList.Count - 3)</div>
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a asp-controller="Project" asp-action="Details" asp-route-id="@project.Id" 
+                                                            class="btn btn-sm btn-outline-primary">
+                                                                <i class="fas fa-eye me-1"></i>Xem
+                                                            </a>
+                                                            <a asp-controller="Project" asp-action="Edit" asp-route-id="@project.Id" 
+                                                            class="btn btn-sm btn-outline-secondary">
+                                                                <i class="fas fa-edit me-1"></i>Sửa
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Recent Tasks -->
+        @if (ViewBag.RecentTasks != null && ((IEnumerable<dynamic>)ViewBag.RecentTasks).Any())
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-transparent border-0 py-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 fw-bold">Công việc gần đây</h5>
+                                <a asp-controller="Task" asp-action="Board" asp-route-projectId="1" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-list me-2"></i>Xem tất cả
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="border-0">Công việc</th>
+                                            <th class="border-0">Dự án</th>
+                                            <th class="border-0">Trạng thái</th>
+                                            <th class="border-0">Ưu tiên</th>
+                                            <th class="border-0">Giao cho</th>
+                                            <th class="border-0">Hạn chót</th>
+                                            <th class="border-0">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var task in ViewBag.RecentTasks)
+                                        {
+                                            @if (task.IsMember)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-tasks text-primary me-3"></i>
+                                                            <span class="fw-medium">@task.Title</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>@task.ProjectName</td>
+                                                    <td>
+                                                        <span class="badge bg-@(task.Status switch {
+                                                            "Not Started" => "secondary",
+                                                            "In Progress" => "primary",
+                                                            "Completed" => "success",
+                                                            "On Hold" => "warning",
+                                                            _ => "secondary"
+                                                        }) rounded-pill px-3 py-2">
+                                                            @task.Status
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-@(task.Priority switch {
+                                                            "High" => "danger",
+                                                            "Medium" => "warning",
+                                                            "Low" => "info",
+                                                            _ => "secondary"
+                                                        }) rounded-pill px-3 py-2">
+                                                            @task.Priority
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="avatar me-2" title="@task.AssignedTo">
+                                                                @task.AssignedToInitials
+                                                            </div>
+                                                            <span class="fw-medium">@task.AssignedTo</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-muted">
+                                                            <i class="far fa-calendar-alt me-2"></i>
+                                                            @task.Deadline?.ToString("dd/MM/yyyy")
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a asp-controller="Task" asp-action="Details" asp-route-id="@task.Id" 
+                                                            class="btn btn-sm btn-outline-primary">
+                                                                <i class="fas fa-eye me-1"></i>Xem
+                                                            </a>
+                                                            <a asp-controller="Task" asp-action="Edit" asp-route-id="@task.Id" 
+                                                            class="btn btn-sm btn-outline-secondary">
+                                                                <i class="fas fa-edit me-1"></i>Sửa
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <!-- Landing content for non-authenticated users -->
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold mb-4">Quản lý dự án dễ dàng</h1>
+                <p class="lead mb-4">Quản lý công việc, hợp tác với thành viên và theo dõi tiến độ chỉ trong một nền tảng. ProFlow giúp bạn tổ chức và đạt mục tiêu dự án hiệu quả.</p>
+                <div class="mt-4">
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-4 me-3">
+                        <i class="fas fa-user-plus me-2"></i>Bắt đầu ngay
+                    </a>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6 text-center">
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #495057;
+        margin-right: -8px;
+        border: 2px solid #fff;
+        transition: transform 0.2s;
+    }
+
+    .avatar:hover {
+        transform: translateY(-2px);
+    }
+
+    .avatar-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .progress {
+        background-color: #e9ecef;
+        border-radius: 0.5rem;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .hover-shadow:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .table > :not(caption) > * > * {
+        padding: 1rem 1.5rem;
+    }
+
+    .btn-group .btn {
+        padding: 0.5rem 1rem;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .table thead th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+
+    .fw-medium {
+        font-weight: 500;
+    }
+</style>

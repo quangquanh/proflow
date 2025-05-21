@@ -1,0 +1,232 @@
+@model ProjectManagementSystem.ViewModels.TaskCalendarViewModel
+@using ProjectManagementSystem.Models
+
+@{
+    ViewData["Title"] = "Task Calendar - " + Model.ProjectName;
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>@Model.ProjectName - Calendar</h2>
+        <div>
+            <a asp-action="Board" asp-route-projectId="@Model.ProjectId" class="btn btn-outline-primary me-2">
+                <i class="bi bi-kanban"></i> Kanban Board
+            </a>
+            <a asp-action="Create" asp-route-projectId="@Model.ProjectId" class="btn btn-primary">
+                <i class="bi bi-plus"></i> Add Task
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="calendar-nav">
+                        <button id="prev" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-chevron-left"></i> Previous
+                        </button>
+                        <button id="next" class="btn btn-sm btn-outline-secondary">
+                            Next <i class="bi bi-chevron-right"></i>
+                        </button>
+                        <button id="today" class="btn btn-sm btn-outline-primary ms-2">Today</button>
+                    </div>
+                    <h5 id="current-view-title" class="mb-0">Calendar</h5>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary @(Model.ViewMode == "month" ? "active" : "")" id="month-view">Month</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary @(Model.ViewMode == "week" ? "active" : "")" id="week-view">Week</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary @(Model.ViewMode == "day" ? "active" : "")" id="day-view">Day</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Status Legend</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="color-box bg-secondary me-2"></div>
+                            <span>Not Started</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="color-box bg-primary me-2"></div>
+                            <span>In Progress</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="color-box bg-success me-2"></div>
+                            <span>Completed</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="color-box bg-warning me-2"></div>
+                            <span>On Hold</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Priority Legend</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="color-box-border border-danger me-2"></div>
+                            <span>High Priority</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="color-box-border border-warning me-2"></div>
+                            <span>Medium Priority</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="color-box-border border-info me-2"></div>
+                            <span>Low Priority</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+    <style>
+        #calendar {
+            height: 600px;
+        }
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        .color-box-border {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border-width: 3px !important;
+            border-style: solid;
+            background-color: white;
+        }
+        .fc-event {
+            cursor: pointer;
+        }
+        .fc-event-title {
+            font-weight: bold;
+        }
+        .fc-daygrid-day.fc-day-today {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+        .fc-list-day-cushion.fc-cell-shaded {
+            background-color: #f8f9fa;
+        }
+        .fc-toolbar-title {
+            font-size: 1.5rem !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            const initialView = '@Model.ViewMode' === 'month' ? 'dayGridMonth' : 
+                                '@Model.ViewMode' === 'week' ? 'timeGridWeek' : 'timeGridDay';
+            
+            // Initialize FullCalendar
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: initialView,
+                headerToolbar: false,
+                events: '/Task/GetCalendarTasks/@Model.ProjectId',
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                },
+                dayMaxEventRows: true,
+                views: {
+                    timeGrid: {
+                        dayMaxEventRows: 6
+                    }
+                },
+                eventDidMount: function(info) {
+                    // Add tooltips to events
+                    $(info.el).tooltip({
+                        title: info.event.extendedProps.description,
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body',
+                        html: true,
+                        template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner text-start"></div></div>'
+                    });
+                }
+            });
+            
+            calendar.render();
+            
+            // Update calendar title
+            function updateCalendarTitle() {
+                const title = calendar.view.title;
+                document.getElementById('current-view-title').textContent = title;
+            }
+            updateCalendarTitle();
+            
+            // Set up navigation buttons
+            document.getElementById('prev').addEventListener('click', function() {
+                calendar.prev();
+                updateCalendarTitle();
+            });
+            
+            document.getElementById('next').addEventListener('click', function() {
+                calendar.next();
+                updateCalendarTitle();
+            });
+            
+            document.getElementById('today').addEventListener('click', function() {
+                calendar.today();
+                updateCalendarTitle();
+            });
+            
+            // Set up view buttons
+            document.getElementById('month-view').addEventListener('click', function() {
+                calendar.changeView('dayGridMonth');
+                updateActiveViewButton('month-view');
+                updateCalendarTitle();
+            });
+            
+            document.getElementById('week-view').addEventListener('click', function() {
+                calendar.changeView('timeGridWeek');
+                updateActiveViewButton('week-view');
+                updateCalendarTitle();
+            });
+            
+            document.getElementById('day-view').addEventListener('click', function() {
+                calendar.changeView('timeGridDay');
+                updateActiveViewButton('day-view');
+                updateCalendarTitle();
+            });
+            
+            function updateActiveViewButton(activeId) {
+                ['month-view', 'week-view', 'day-view'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (id === activeId) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
+} 

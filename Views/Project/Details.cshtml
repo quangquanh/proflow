@@ -1,0 +1,565 @@
+@model ProjectManagementSystem.Models.Project
+@using ProjectManagementSystem.Models
+
+@{
+    ViewData["Title"] = "Chi tiết dự án";
+    bool isOwner = ViewData["IsOwner"] != null ? (bool)ViewData["IsOwner"] : false;
+    bool isAdmin = ViewData["IsAdmin"] != null ? (bool)ViewData["IsAdmin"] : false;
+}
+
+@section Styles {
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <style>
+        #calendar {
+            height: 650px;
+            margin: 0 auto;
+            background: #fff;
+        }
+    </style>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">@Model.Name</h1>
+    <div>
+        @if (ViewData["IsOwner"] != null && (bool)ViewData["IsOwner"] || ViewData["IsAdmin"] != null && (bool)ViewData["IsAdmin"])
+        {
+            <a asp-controller="Project" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Sửa
+            </a>
+        }
+        <a asp-controller="Task" asp-action="Board" asp-route-projectId="@Model.Id" class="btn btn-primary">
+            <i class="fas fa-tasks"></i> Bảng công việc
+        </a>
+        <a asp-controller="Report" asp-action="ProjectReport" asp-route-id="@Model.Id" class="btn btn-info">
+            <i class="fas fa-chart-bar"></i> Báo cáo
+        </a>
+    </div>
+</div>
+
+<ul class="nav nav-tabs mb-4" id="projectTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+            <i class="fas fa-info-circle"></i> Tổng quan
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button" role="tab">
+            <i class="fas fa-tasks"></i> Công việc
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar" type="button" role="tab">
+            <i class="fas fa-calendar"></i> Lịch
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab">
+            <i class="fas fa-users"></i> Thành viên
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="projectTabsContent">
+    <!-- Overview Tab -->
+    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Thông tin dự án</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6 class="text-muted">Mô tả</h6>
+                            <p>@Model.Description</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-muted">Trạng thái</h6>
+                                <span class="badge bg-@(Model.Status switch {
+                                    ProjectManagementSystem.Models.ProjectStatus.Pending => "warning",
+                                    ProjectManagementSystem.Models.ProjectStatus.InProgress => "primary",
+                                    ProjectManagementSystem.Models.ProjectStatus.Completed => "success",
+                                    ProjectManagementSystem.Models.ProjectStatus.OnHold => "info",
+                                    ProjectManagementSystem.Models.ProjectStatus.Cancelled => "danger",
+                                    _ => "secondary"
+                                })">@Model.Status</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-muted">Người tạo</h6>
+                                <p>@Model.CreatedBy.FirstName @Model.CreatedBy.LastName</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-muted">Ngày bắt đầu</h6>
+                                <p>@(Model.StartDate.HasValue ? Model.StartDate.Value.ToString("dd/MM/yyyy") : "Chưa đặt")</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-muted">Ngày kết thúc</h6>
+                                <p>@(Model.EndDate.HasValue ? Model.EndDate.Value.ToString("dd/MM/yyyy") : "Chưa đặt")</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-muted">Ngày tạo</h6>
+                                <p>@Model.CreatedAt.ToString("dd/MM/yyyy")</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <h6 class="text-muted">Cập nhật lần cuối</h6>
+                                <p>@(Model.UpdatedAt.HasValue ? Model.UpdatedAt.Value.ToString("dd/MM/yyyy") : "Chưa cập nhật")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Thống kê nhanh</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6 class="text-muted">Tiến độ</h6>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: @(Model.Tasks?.Any() == true ? 
+                                        (int)((double)Model.Tasks.Count(t => t.Status == ProjectTaskStatus.Completed) / Model.Tasks.Count() * 100) : 0)%;" 
+                                     aria-valuenow="@(Model.Tasks?.Any() == true ? 
+                                        (int)((double)Model.Tasks.Count(t => t.Status == ProjectTaskStatus.Completed) / Model.Tasks.Count() * 100) : 0)" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100"></div>
+                            </div>
+                            <small class="text-muted">@(Model.Tasks?.Any() == true ? 
+                                (int)((double)Model.Tasks.Count(t => t.Status == ProjectTaskStatus.Completed) / Model.Tasks.Count() * 100) : 0)% Hoàn thành</small>
+                        </div>
+                        <div class="mb-3">
+                            <h6 class="text-muted">Công việc</h6>
+                            <p class="mb-0">
+                                @(Model.Tasks?.Count() ?? 0) Công việc
+                                <br>
+                                <small class="text-success">@(Model.Tasks?.Count(t => t.Status == ProjectTaskStatus.Completed) ?? 0) Đã hoàn thành</small>
+                                <br>
+                                <small class="text-warning">@(Model.Tasks?.Count(t => t.Status == ProjectTaskStatus.InProgress) ?? 0) Đang thực hiện</small>
+                            </p>
+                        </div>
+                        <div>
+                            <h6 class="text-muted">Thành viên</h6>
+                            <p class="mb-0">@Model.ProjectMembers.Count thành viên</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tasks Tab -->
+    <div class="tab-pane fade" id="tasks" role="tabpanel">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Công việc dự án</h5>
+                @if (isOwner || isAdmin)
+                {
+                    <a asp-controller="Task" asp-action="Create" asp-route-projectId="@Model.Id" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Thêm công việc
+                    </a>
+                }
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tiêu đề</th>
+                                <th>Trạng thái</th>
+                                <th>Ưu tiên</th>
+                                <th>Giao cho</th>
+                                <th>Hạn chót</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var task in (Model.Tasks ?? Enumerable.Empty<ProjectTask>()).OrderByDescending(t => t.CreatedAt))
+                            {
+                                <tr>
+                                    <td>@task.Title</td>
+                                    <td>
+                                        <span class="badge bg-@(task.Status switch {
+                                            ProjectTaskStatus.NotStarted => "secondary",
+                                            ProjectTaskStatus.InProgress => "primary",
+                                            ProjectTaskStatus.Completed => "success",
+                                            ProjectTaskStatus.OnHold => "warning",
+                                            _ => "secondary"
+                                        })">@task.Status</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-@(task.Priority.ToString() switch {
+                                            "High" => "danger",
+                                            "Medium" => "warning",
+                                            "Low" => "info",
+                                            _ => "secondary"
+                                        })">@task.Priority</span>
+                                    </td>
+                                    <td>
+                                        @if (task.AssignedTo != null)
+                                        {
+                                            <span>@task.AssignedTo.FirstName @task.AssignedTo.LastName</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chưa giao</span>
+                                        }
+                                    </td>
+                                    <td>@(task.Deadline != null ? task.Deadline.ToString("dd/MM/yyyy") : "Chưa đặt")</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a asp-controller="Task" asp-action="Details" asp-route-id="@task.Id" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i> Xem
+                                            </a>
+                                            @if (isOwner || isAdmin)
+                                            {
+                                                <a asp-controller="Task" asp-action="Edit" asp-route-id="@task.Id" 
+                                                   class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fas fa-edit"></i> Sửa
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kanban Tab -->
+    <div class="tab-pane fade" id="kanban" role="tabpanel">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Bảng Kanban</h5>
+                @if (isOwner || isAdmin)
+                {
+                    <a asp-controller="Task" asp-action="Create" asp-route-projectId="@Model.Id" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Thêm công việc
+                    </a>
+                }
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-header">
+                                <h6 class="mb-0">Chưa bắt đầu</h6>
+                            </div>
+                            <div class="card-body">
+                                @foreach (var task in Model.Tasks?.Where(t => t.Status == ProjectTaskStatus.NotStarted) ?? Enumerable.Empty<ProjectTask>())
+                                {
+                                    <div class="card mb-2">
+                                        <div class="card-body">
+                                            <h6 class="card-title">@task.Title</h6>
+                                            <p class="card-text small">@task.Description</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="badge bg-@(task.Priority.ToString() switch {
+                                                    "High" => "danger",
+                                                    "Medium" => "warning",
+                                                    "Low" => "info",
+                                                    _ => "secondary"
+                                                })">@task.Priority</span>
+                                                <small class="text-muted">@task.Deadline.ToString("dd/MM")</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-header">
+                                <h6 class="mb-0">Đang thực hiện</h6>
+                            </div>
+                            <div class="card-body">
+                                @foreach (var task in Model.Tasks?.Where(t => t.Status == ProjectTaskStatus.InProgress) ?? Enumerable.Empty<ProjectTask>())
+                                {
+                                    <div class="card mb-2">
+                                        <div class="card-body">
+                                            <h6 class="card-title">@task.Title</h6>
+                                            <p class="card-text small">@task.Description</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="badge bg-@(task.Priority.ToString() switch {
+                                                    "High" => "danger",
+                                                    "Medium" => "warning",
+                                                    "Low" => "info",
+                                                    _ => "secondary"
+                                                })">@task.Priority</span>
+                                                <small class="text-muted">@task.Deadline.ToString("dd/MM")</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-header">
+                                <h6 class="mb-0">Tạm dừng</h6>
+                            </div>
+                            <div class="card-body">
+                                @foreach (var task in Model.Tasks?.Where(t => t.Status == ProjectTaskStatus.OnHold) ?? Enumerable.Empty<ProjectTask>())
+                                {
+                                    <div class="card mb-2">
+                                        <div class="card-body">
+                                            <h6 class="card-title">@task.Title</h6>
+                                            <p class="card-text small">@task.Description</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="badge bg-@(task.Priority.ToString() switch {
+                                                    "High" => "danger",
+                                                    "Medium" => "warning",
+                                                    "Low" => "info",
+                                                    _ => "secondary"
+                                                })">@task.Priority</span>
+                                                <small class="text-muted">@task.Deadline.ToString("dd/MM")</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-header">
+                                <h6 class="mb-0">Đã hoàn thành</h6>
+                            </div>
+                            <div class="card-body">
+                                @foreach (var task in Model.Tasks?.Where(t => t.Status == ProjectTaskStatus.Completed) ?? Enumerable.Empty<ProjectTask>())
+                                {
+                                    <div class="card mb-2">
+                                        <div class="card-body">
+                                            <h6 class="card-title">@task.Title</h6>
+                                            <p class="card-text small">@task.Description</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="badge bg-@(task.Priority.ToString() switch {
+                                                    "High" => "danger",
+                                                    "Medium" => "warning",
+                                                    "Low" => "info",
+                                                    _ => "secondary"
+                                                })">@task.Priority</span>
+                                                <small class="text-muted">@task.Deadline.ToString("dd/MM")</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Tab -->
+    <div class="tab-pane fade" id="team" role="tabpanel">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Thành viên dự án</h5>
+                @if (isOwner || isAdmin)
+                {
+                    <a asp-controller="ProjectMember" asp-action="Index" asp-route-projectId="@Model.Id" class="btn btn-primary btn-sm">
+                        <i class="fas fa-users-cog"></i> Quản lý thành viên
+                    </a>
+                }
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Họ tên</th>
+                                <th>Email</th>
+                                <th>Vai trò</th>
+                                <th>Ngày tham gia</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var member in Model.ProjectMembers.OrderBy(m => m.Role))
+                            {
+                                <tr>
+                                    <td>@member.User.FirstName @member.User.LastName</td>
+                                    <td>@member.User.Email</td>
+                                    <td>
+                                        <span class="badge bg-@(member.Role switch {
+                                            ProjectRole.Owner => "danger",
+                                            ProjectRole.Manager => "warning",
+                                            ProjectRole.Member => "info",
+                                            _ => "secondary"
+                                        })">@member.Role</span>
+                                    </td>
+                                    <td>@member.JoinedAt.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @if (isOwner || isAdmin)
+                                        {
+                                            <div class="btn-group">
+                                                @if (member.Role != ProjectRole.Owner)
+                                                {
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#removeMemberModal"
+                                                            data-member-id="@member.UserId"
+                                                            data-member-name="@member.User.FirstName @member.User.LastName">
+                                                        <i class="fas fa-user-minus"></i>
+                                                    </button>
+                                                }
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Tab -->
+    <div class="tab-pane fade" id="calendar" role="tabpanel">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Lịch dự án</h5>
+            </div>
+            <div class="card-body">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (isOwner || isAdmin)
+{
+    <div class="mt-3">
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <i class="fas fa-trash"></i> Xóa dự án
+        </button>
+    </div>
+    
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn xóa dự án "@Model.Name"? Hành động này không thể hoàn tác.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Member Modal -->
+    <div class="modal fade" id="removeMemberModal" tabindex="-1" aria-labelledby="removeMemberModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeMemberModalLabel">Xóa thành viên khỏi dự án</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn xóa <span id="memberName"></span> khỏi dự án?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <form asp-controller="ProjectMember" asp-action="Remove" method="post">
+                        <input type="hidden" name="projectId" value="@Model.Id" />
+                        <input type="hidden" name="userId" id="memberId" />
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        // Handle remove member modal
+        var removeMemberModal = document.getElementById('removeMemberModal')
+        if (removeMemberModal) {
+            removeMemberModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget
+                var memberId = button.getAttribute('data-member-id')
+                var memberName = button.getAttribute('data-member-name')
+                
+                var modalMemberId = removeMemberModal.querySelector('#memberId')
+                var modalMemberName = removeMemberModal.querySelector('#memberName')
+                
+                modalMemberId.value = memberId
+                modalMemberName.textContent = memberName
+            })
+        }
+
+        // Calendar code
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we're on the calendar tab
+            document.querySelector('#calendar-tab').addEventListener('shown.bs.tab', function (e) {
+                renderCalendar();
+            });
+            
+            // Initial render if we're already on the calendar tab
+            if (document.querySelector('#calendar').closest('.tab-pane').classList.contains('show')) {
+                renderCalendar();
+            }
+            
+            function renderCalendar() {
+                var calendarEl = document.getElementById('calendar');
+                if (!calendarEl) return;
+                
+                // Clear any existing calendar
+                while (calendarEl.firstChild) {
+                    calendarEl.removeChild(calendarEl.firstChild);
+                }
+                
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    height: 'auto',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    },
+                    events: [
+                    @if (Model.Tasks != null)
+                    {
+                        foreach (var task in Model.Tasks)
+                        {
+                            @:{ id: '@task.Id', title: '@task.Title', start: '@task.Deadline.ToString("yyyy-MM-dd")' },
+                        }
+                    }
+                    ]
+                });
+                
+                calendar.render();
+            }
+        });
+    </script>
+} 

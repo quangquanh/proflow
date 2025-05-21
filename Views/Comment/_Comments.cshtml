@@ -1,0 +1,318 @@
+@model ProjectManagementSystem.ViewModels.TaskCommentsViewModel
+
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="fas fa-comments me-2"></i>Bình luận
+        </h5>
+        <span class="badge bg-primary">@Model.Comments.Count</span>
+    </div>
+    <div class="card-body">
+        <!-- Comments list -->
+        <div class="comments-list mb-4">
+            @if (Model.Comments.Any())
+            {
+                foreach (var comment in Model.Comments)
+                {
+                    var initials = string.Join("", comment.UserName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper();
+                    <div class="comment @(comment.IsCurrentUserComment ? "comment-own" : "") mb-3" id="comment-@comment.Id">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-shrink-0">
+                                <div class="avatar-initials me-3" title="@comment.UserName">@initials</div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0">@comment.UserName</h6>
+                                    <small class="text-muted">@comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                </div>
+                                <div class="comment-content bg-light rounded p-2">
+                                    <p class="mb-1">@Html.Raw(comment.Content)</p>
+                                    @if (comment.Mentions != null && comment.Mentions.Any())
+                                    {
+                                        <div class="tagged-users mt-1">
+                                            <small class="text-muted">Gắn thẻ: </small>
+                                            @foreach (var mention in comment.Mentions)
+                                            {
+                                                <span class="badge bg-light text-primary me-1">@mention.UserName</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                                @if (comment.IsCurrentUserComment)
+                                {
+                                    <div class="comment-actions mt-2">
+                                        <button class="btn btn-sm btn-outline-secondary edit-comment-btn" data-comment-id="@comment.Id">
+                                            <i class="fas fa-edit me-1"></i>Sửa
+                                        </button>
+                                    </div>
+                                    <form id="edit-form-@comment.Id" class="edit-comment-form mt-2" style="display: none;" asp-controller="Comment" asp-action="Edit" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@comment.Id" />
+                                        <div class="form-group">
+                                            <textarea name="content" class="form-control" rows="3">@comment.Content</textarea>
+                                        </div>
+                                        <div class="mt-2">
+                                            <button type="submit" class="btn btn-sm btn-primary">Lưu</button>
+                                            <button type="button" class="btn btn-sm btn-secondary cancel-edit-btn">Hủy</button>
+                                        </div>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center text-muted">
+                    <p>Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p>
+                </div>
+            }
+        </div>
+
+        <!-- Comment form -->
+        <div class="new-comment">
+            <h6 class="mb-3">Thêm bình luận</h6>
+            <form id="commentForm" method="post" action="@Url.Action("Create", "Comment")">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="TaskId" value="@Model.TaskId" />
+                <div class="form-group">
+                    @{
+                        var newContent = Model.NewComment?.Content ?? "";
+                    }
+                    <textarea name="Content" id="commentContent" class="form-control" rows="3" placeholder="Nhập bình luận của bạn..." required>@Html.Raw(newContent)</textarea>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="Content" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-group mt-2">
+                    <label>Gắn thẻ thành viên:</label>
+                    <div class="tagged-users-container">
+                        <div id="selectedUsers" class="selected-users mb-2">
+                            <!-- Selected users will appear here -->
+                        </div>
+                        <button type="button" id="showMembersBtn" class="btn btn-outline-secondary">
+                            <i class="fas fa-at"></i> Gắn thẻ thành viên
+                        </button>
+
+                        <div id="membersList" class="members-list" style="display: none;">
+                            @if(Model.ProjectMembers != null && Model.ProjectMembers.Any())
+                            {
+                                foreach (var member in Model.ProjectMembers)
+                                {
+                                    <div class="member-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input user-tag" 
+                                                   type="checkbox" 
+                                                   id="tag-@member.Id" 
+                                                   value="@member.Id" 
+                                                   data-name="@member.FullName"
+                                                   data-picture="@member.ProfilePicture">
+                                            <label class="form-check-label" for="tag-@member.Id">
+                                                <img src="@member.ProfilePicture" class="avatar-sm rounded-circle me-1" alt="@member.FullName">
+                                                @member.FullName
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="p-3 text-center">Không có thành viên nào</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i>Đăng bình luận
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.edit-comment-btn').click(function() {
+            var commentId = $(this).data('comment-id');
+            $('#comment-' + commentId + ' .comment-content').hide();
+            $('#comment-' + commentId + ' .comment-actions').hide();
+            $('#edit-form-' + commentId).show();
+        });
+
+        $('.cancel-edit-btn').click(function() {
+            var form = $(this).closest('.edit-comment-form');
+            form.hide();
+            form.closest('.comment').find('.comment-content').show();
+            form.closest('.comment').find('.comment-actions').show();
+        });
+
+        $('#showMembersBtn').click(function() {
+            $('#membersList').toggle();
+        });
+
+        $(document).click(function(event) {
+            if (!$(event.target).closest('.tagged-users-container').length) {
+                $('#membersList').hide();
+            }
+        });
+
+        // Handle user tag selection
+        $('.user-tag').change(function() {
+            updateSelectedUsers();
+        });
+
+        function updateSelectedUsers() {
+            var selectedUsersDiv = $('#selectedUsers');
+            selectedUsersDiv.empty();
+            
+            $('.user-tag:checked').each(function() {
+                var userId = $(this).val();
+                var userName = $(this).data('name');
+                var userPicture = $(this).data('picture');
+                
+                var tagHtml = `
+                    <div class="selected-user-tag" data-user-id="${userId}">
+                        <img src="${userPicture}" class="avatar-xs rounded-circle" alt="${userName}">
+                        <span>${userName}</span>
+                        <button type="button" class="btn-close btn-close-white remove-tag" aria-label="Xóa"></button>
+                        <input type="hidden" name="TaggedUserIds" value="${userId}">
+                    </div>
+                `;
+                
+                selectedUsersDiv.append(tagHtml);
+            });
+            
+            // Add event handlers for the remove buttons
+            $('.remove-tag').click(function() {
+                var userId = $(this).closest('.selected-user-tag').data('user-id');
+                $('#tag-' + userId).prop('checked', false);
+                updateSelectedUsers();
+            });
+        }
+
+        // Initialize selected users
+        updateSelectedUsers();
+    });
+</script>
+
+<style>
+    .avatar-initials {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 6px rgba(34,74,190,0.08);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .comment-content {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+    .comment-own {
+        background: #f0f7ff;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+    }
+    .comment-actions button {
+        font-size: 0.95rem;
+    }
+
+    .comment {
+        margin-bottom: 1.5rem;
+    }
+
+    .comment-own {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+
+    .avatar-sm {
+        width: 24px;
+        height: 24px;
+        object-fit: cover;
+    }
+
+    .avatar-xs {
+        width: 16px;
+        height: 16px;
+        object-fit: cover;
+    }
+
+    .mention {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    .tagged-users-container {
+        position: relative;
+    }
+
+    .members-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 250px;
+        max-height: 300px;
+        overflow-y: auto;
+        background-color: #fff;
+        border: 1px solid rgba(0,0,0,.15);
+        border-radius: 0.25rem;
+        z-index: 1000;
+        margin-top: 0.5rem;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+    }
+
+    .member-item {
+        transition: background-color 0.2s;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .member-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .selected-users {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .selected-user-tag {
+        display: flex;
+        align-items: center;
+        background-color: #007bff;
+        color: white;
+        border-radius: 1rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        gap: 0.25rem;
+    }
+
+    .selected-user-tag .btn-close {
+        font-size: 0.6rem;
+        padding: 0.1rem;
+    }
+    
+    .edit-tagged-users {
+        max-height: 150px;
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+    }
+</style>

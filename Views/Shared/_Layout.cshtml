@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ProFlow</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ProjectManagementSystem.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark jira-navbar border-bottom box-shadow mb-3">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-project-diagram me-2"></i>
+                    <span class="fw-bold">ProFlow</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Chuyển đổi menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light nav-link-custom" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i>Trang chủ
+                            </a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light nav-link-custom" asp-area="" asp-controller="Project" asp-action="Index">
+                                    <i class="fas fa-project-diagram me-1"></i>Dự án
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light nav-link-custom" asp-area="" asp-controller="Search" asp-action="Index">
+                                    <i class="fas fa-search me-1"></i>Tìm kiếm
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light nav-link-custom" asp-area="" asp-controller="Report" asp-action="Index">
+                                    <i class="fas fa-chart-bar me-1"></i>Báo cáo
+                                </a>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-light nav-link-custom" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-user-shield me-1"></i>Quản trị
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="adminDropdown">
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users"><i class="fas fa-users me-2"></i>Quản lý người dùng</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="TestNotification"><i class="fas fa-bell me-2"></i>Thông báo hệ thống</a></li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav align-items-center">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown me-3">
+                                <a class="nav-link text-light position-relative nav-link-custom" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-bell"></i>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge pulse" style="display: none;">
+                                        0
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-custom" aria-labelledby="notificationsDropdown" id="notificationsContainer">
+                                    <div class="text-center p-3">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                            <span class="visually-hidden">Đang tải...</span>
+                                        </div>
+                                        <p class="mb-0 mt-1">Đang tải thông báo...</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-light nav-link-custom d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div class="avatar-circle me-2">
+                                        @User.Identity.Name.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <span class="d-none d-md-inline">@User.Identity.Name</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="fas fa-user me-2"></i>Thông tin cá nhân</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword"><i class="fas fa-key me-2"></i>Đổi mật khẩu</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                            <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light nav-link-custom" asp-controller="Account" asp-action="Login">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Đăng nhập
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light nav-link-custom" asp-controller="Account" asp-action="Register">
+                                    <i class="fas fa-user-plus me-1"></i>Đăng ký
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @if (TempData["StatusMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["StatusMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - ProFlow
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/notification.js" asp-append-version="true"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+<style>
+    .jira-navbar {
+        background-color: #0052CC;
+        padding: 0.5rem 0;
+    }
+
+    .navbar {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;
+        transition: transform 0.2s ease;
+    }
+
+    .navbar-brand:hover {
+        transform: translateY(-1px);
+    }
+
+    .nav-link-custom {
+        position: relative;
+        padding: 0.5rem 1rem;
+        margin: 0 0.2rem;
+        border-radius: 3px;
+        transition: all 0.2s ease;
+    }
+
+    .nav-link-custom:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-link-custom.active {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .dropdown-menu-custom {
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 3px;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+        min-width: 200px;
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+        border-radius: 3px;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+        background-color: #F4F5F7;
+        transform: translateX(3px);
+    }
+
+    .notification-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 0.8;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .avatar-circle {
+        width: 32px;
+        height: 32px;
+        background-color: #172B4D;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .navbar-toggler {
+        border: none;
+        padding: 0.5rem;
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    @@media (max-width: 768px) {
+        .container-fluid {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        
+        .nav-link-custom {
+            padding: 0.75rem 1rem;
+        }
+    }
+</style>
