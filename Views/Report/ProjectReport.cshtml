@@ -82,16 +82,7 @@
     </div>
     
     <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Công việc theo trạng thái</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="taskStatusChart"></canvas>
-                </div>
-            </div>
-        </div>
+       
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-header">
@@ -196,7 +187,7 @@
             const userTasksData = @Html.Raw(Json.Serialize(Model.TasksPerUser));
             const weeklyTrendData = @Html.Raw(Json.Serialize(Model.WeeklyCompletionTrend));
             // Create charts
-            createTaskStatusChart('taskStatusChart', statusData);
+            // createTaskStatusChart('taskStatusChart', statusData);
             createTaskPriorityChart('taskPriorityChart', priorityData);
             createTasksPerUserChart('tasksPerUserChart', userTasksData);
             createWeeklyCompletionChart('weeklyCompletionChart', weeklyTrendData);

@@ -245,6 +245,7 @@ namespace ProjectManagementSystem.Controllers
         {
             var team = await _context.Teams
                 .Include(t => t.TeamMembers)
+                .Include(t => t.ProjectTeams)
                 .FirstOrDefaultAsync(t => t.Id == teamId);
 
             if (team == null)
@@ -273,6 +274,16 @@ namespace ProjectManagementSystem.Controllers
                 team.TeamMembers.Count(tm => tm.Role == TeamRole.TeamLead) <= 1)
             {
                 return Json(new { success = false, message = "Cannot remove the last team lead" });
+            }
+
+            // Check if user is assigned to any tasks in projects where this team is involved
+            var projectIds = team.ProjectTeams.Select(pt => pt.ProjectId).ToList();
+            var hasAssignedTasks = await _context.ProjectTasks
+                .AnyAsync(t => projectIds.Contains(t.ProjectId) && t.AssignedToId == userId);
+
+            if (hasAssignedTasks)
+            {
+                return Json(new { success = false, message = "Cannot remove member who has assigned tasks" });
             }
 
             _context.Remove(teamMember);

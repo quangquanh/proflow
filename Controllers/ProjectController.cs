@@ -13,11 +13,13 @@ namespace ProjectManagementSystem.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProjectController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ProjectController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index(string searchString, ProjectStatus? status)
@@ -235,6 +237,9 @@ namespace ProjectManagementSystem.Controllers
         {
             var project = await _context.Projects
                 .Include(p => p.ProjectMembers)
+                .Include(p => p.Tasks)
+                    .ThenInclude(t => t.Comments)
+                        .ThenInclude(c => c.Mentions)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (project == null)
@@ -250,6 +255,33 @@ namespace ProjectManagementSystem.Controllers
             if (!isAdmin && !isOwner)
             {
                 return Forbid();
+            }
+
+            // Delete all tasks and their related data
+            foreach (var task in project.Tasks)
+            {
+                // Delete task comments and mentions
+                foreach (var comment in task.Comments)
+                {
+                    _context.CommentMentions.RemoveRange(comment.Mentions);
+                }
+                _context.TaskComments.RemoveRange(task.Comments);
+
+                // Delete task notifications
+                var taskNotifications = await _context.Notifications
+                    .Where(n => n.TaskId == task.Id)
+                    .ToListAsync();
+                _context.Notifications.RemoveRange(taskNotifications);
+
+                // Delete task attachment if exists
+                if (!string.IsNullOrEmpty(task.AttachmentPath))
+                {
+                    var filePath = Path.Combine(_webHostEnvironment.WebRootPath, task.AttachmentPath.TrimStart('/'));
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
             }
 
             _context.Projects.Remove(project);

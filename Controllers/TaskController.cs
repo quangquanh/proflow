@@ -19,17 +19,20 @@ namespace ProjectManagementSystem.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IEmailService _emailService;
 
         public TaskController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             IWebHostEnvironment webHostEnvironment,
-            IHubContext<NotificationHub> hubContext)
+            IHubContext<NotificationHub> hubContext,
+            IEmailService emailService)
         {
             _context = context;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
             _hubContext = hubContext;
+            _emailService = emailService;
         }
 
         // GET: Task/Board/5 (projectId)
@@ -457,7 +460,12 @@ namespace ProjectManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var task = await _context.ProjectTasks.FindAsync(id);
+            var task = await _context.ProjectTasks
+                .Include(t => t.Project)
+                .Include(t => t.Comments)
+                    .ThenInclude(c => c.Mentions)
+                .FirstOrDefaultAsync(t => t.Id == id);
+                
             if (task == null)
             {
                 return NotFound();
@@ -474,6 +482,19 @@ namespace ProjectManagementSystem.Controllers
             }
 
             int projectId = task.ProjectId;
+
+            // Delete related notifications first
+            var notifications = await _context.Notifications
+                .Where(n => n.TaskId == id)
+                .ToListAsync();
+            _context.Notifications.RemoveRange(notifications);
+
+            // Delete all comments and their mentions
+            foreach (var comment in task.Comments)
+            {
+                _context.CommentMentions.RemoveRange(comment.Mentions);
+            }
+            _context.TaskComments.RemoveRange(task.Comments);
 
             // Delete attachment if exists
             if (!string.IsNullOrEmpty(task.AttachmentPath))
@@ -496,7 +517,10 @@ namespace ProjectManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(UpdateTaskStatusViewModel model)
         {
-            var task = await _context.ProjectTasks.FindAsync(model.TaskId);
+            var task = await _context.ProjectTasks
+                .Include(t => t.AssignedTo)
+                .FirstOrDefaultAsync(t => t.Id == model.TaskId);
+            
             if (task == null)
             {
                 return NotFound();
@@ -538,6 +562,26 @@ namespace ProjectManagementSystem.Controllers
                 
                 // Send real-time notification
                 await NotificationService.SendRealTimeNotification(_hubContext, notification);
+
+                // Send email notification
+                if (task.AssignedTo != null && !string.IsNullOrEmpty(task.AssignedTo.Email))
+                {
+                    var emailSubject = $"Task Status Update: {task.Title}";
+                    var emailBody = $@"
+                        <h2>Task Status Update</h2>
+                        <p>Hello {task.AssignedTo.FirstName} {task.AssignedTo.LastName},</p>
+                        <p>The status of your assigned task has been updated:</p>
+                        <ul>
+                            <li><strong>Task:</strong> {task.Title}</li>
+                            <li><strong>Old Status:</strong> {oldStatus}</li>
+                            <li><strong>New Status:</strong> {task.Status}</li>
+                            <li><strong>Updated By:</strong> {currentUser.FirstName} {currentUser.LastName}</li>
+                        </ul>
+                        <p>You can view the task details by clicking <a href='{Url.Action("Details", "Task", new { id = task.Id }, Request.Scheme)}'>here</a>.</p>
+                        <p>Best regards,<br>Project Management System</p>";
+
+                    await _emailService.SendEmailAsync(task.AssignedTo.Email, emailSubject, emailBody);
+                }
             }
 
             return Json(new { success = true });

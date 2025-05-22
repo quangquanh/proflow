@@ -72,7 +72,7 @@ builder.Services.AddSignalR();
 
 builder.Services.AddHostedService<TaskReminderService>();
 builder.Services.AddHostedService<NotificationService>();
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddSwaggerGen(c =>
 {

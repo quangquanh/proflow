@@ -311,3 +311,4 @@ C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\Swashbu
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\ProjectManagementSystem.xml
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\ProjectManagementSystem.xml
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\compressed\mb714qhxcw-7faralo3uu.gz
+C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\ProjectManagementSystem.sourcelink.json

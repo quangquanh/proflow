@@ -39,9 +39,13 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" asp-action="Delete" asp-route-id="@project.Id">
-                                            <i class="fas fa-trash me-2"></i> Xóa
-                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@project.Id" method="post" style="display: inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item text-danger" 
+                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa dự án này?');">
+                                                <i class="fas fa-trash me-2"></i> Xóa
+                                            </button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
