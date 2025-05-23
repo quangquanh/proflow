@@ -816,6 +816,18 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-w\u002BkVnLLo5bTH6vpVlmp9TKRzOLo\u002BP5V312Kwt8VllMI="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"7357"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022w\u002BkVnLLo5bTH6vpVlmp9TKRzOLo\u002BP5V312Kwt8VllMI=\u0022"},{"Name":"Last-Modified","Value":"Sat, 17 May 2025 04:41:02 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProjectManagementSystem/uploads/tasks/4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tasks\4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"16671"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=\u0022"},{"Name":"Last-Modified","Value":"Fri, 23 May 2025 08:55:11 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProjectManagementSystem/uploads/tasks/4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.r1ct2g5mch.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tasks\4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"r1ct2g5mch"},{"Name":"integrity","Value":"sha256-PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI="},{"Name":"label","Value":"_content/ProjectManagementSystem/uploads/tasks/4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_t\u1EA3i xu\u1ED1ng.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"16671"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=\u0022"},{"Name":"Last-Modified","Value":"Fri, 23 May 2025 08:55:11 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProjectManagementSystem/uploads/tasks/71296299-ef92-420d-b055-37e1c44556ef_tải xuống.d4m9mej90z.jpg">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tasks\71296299-ef92-420d-b055-37e1c44556ef_tải xuống.jpg'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
@@ -839,6 +851,18 @@
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-YEsqOOU/pOyO0mG8RFBjtbx/RxDBThcn1c2lJ/w1D0I="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"78664"},{"Name":"Content-Type","Value":"application/octet-stream"},{"Name":"ETag","Value":"\u0022YEsqOOU/pOyO0mG8RFBjtbx/RxDBThcn1c2lJ/w1D0I=\u0022"},{"Name":"Last-Modified","Value":"Sat, 17 May 2025 18:35:16 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProjectManagementSystem/uploads/tasks/ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tasks\ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"16671"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=\u0022"},{"Name":"Last-Modified","Value":"Fri, 23 May 2025 08:56:17 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProjectManagementSystem/uploads/tasks/ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.r1ct2g5mch.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tasks\ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"r1ct2g5mch"},{"Name":"integrity","Value":"sha256-PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI="},{"Name":"label","Value":"_content/ProjectManagementSystem/uploads/tasks/ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_t\u1EA3i xu\u1ED1ng.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"16671"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=\u0022"},{"Name":"Last-Modified","Value":"Fri, 23 May 2025 08:56:17 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProjectManagementSystem/uploads/tasks/f5f17af4-736c-444b-bb58-78b53898d052_dump2.8eens0r36k.sql">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tasks\f5f17af4-736c-444b-bb58-78b53898d052_dump2.sql'))</AssetFile>

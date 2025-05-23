@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "qLy2QFS2vjQHxXSB4qgqk+oBOEtKXEzp7louz870670=",
+  "Hash": "sdSVrhdiyFll4yBCasHSIW6ZdHVYnCIb0gSm55hDGFE=",
   "Source": "ProjectManagementSystem",
   "BasePath": "_content/ProjectManagementSystem",
   "Mode": "Default",
@@ -5498,6 +5498,27 @@
       "OriginalItemSpec": "wwwroot\\uploads\\tasks\\23529660-ec78-4df7-8fd1-c5d71d43a6ee_tải xuống.jpg"
     },
     {
+      "Identity": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\uploads\\tasks\\4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.jpg",
+      "SourceId": "ProjectManagementSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\",
+      "BasePath": "_content/ProjectManagementSystem",
+      "RelativePath": "uploads/tasks/4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "r1ct2g5mch",
+      "Integrity": "PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\tasks\\4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.jpg"
+    },
+    {
       "Identity": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\uploads\\tasks\\71296299-ef92-420d-b055-37e1c44556ef_tải xuống.jpg",
       "SourceId": "ProjectManagementSystem",
       "SourceType": "Discovered",
@@ -5538,6 +5559,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\tasks\\c1ad0291-3b4a-4326-bd1e-a2b8cc754ecd_dump2.sql"
+    },
+    {
+      "Identity": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\uploads\\tasks\\ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.jpg",
+      "SourceId": "ProjectManagementSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\",
+      "BasePath": "_content/ProjectManagementSystem",
+      "RelativePath": "uploads/tasks/ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "r1ct2g5mch",
+      "Integrity": "PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\tasks\\ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.jpg"
     },
     {
       "Identity": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\uploads\\tasks\\f5f17af4-736c-444b-bb58-78b53898d052_dump2.sql",
@@ -36555,6 +36597,88 @@
       ]
     },
     {
+      "Route": "uploads/tasks/4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.jpg",
+      "AssetFile": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\uploads\\tasks\\4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16671"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 23 May 2025 08:55:11 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/tasks/4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.r1ct2g5mch.jpg",
+      "AssetFile": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\uploads\\tasks\\4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16671"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 23 May 2025 08:55:11 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "r1ct2g5mch"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/tasks/4282fb5f-8e5e-41cc-9f21-2f71dcb1c999_tải xuống.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI="
+        }
+      ]
+    },
+    {
       "Route": "uploads/tasks/71296299-ef92-420d-b055-37e1c44556ef_tải xuống.d4m9mej90z.jpg",
       "AssetFile": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\uploads\\tasks\\71296299-ef92-420d-b055-37e1c44556ef_tải xuống.jpg",
       "Selectors": [],
@@ -36715,6 +36839,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-YEsqOOU/pOyO0mG8RFBjtbx/RxDBThcn1c2lJ/w1D0I="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/tasks/ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.jpg",
+      "AssetFile": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\uploads\\tasks\\ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16671"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 23 May 2025 08:56:17 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/tasks/ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.r1ct2g5mch.jpg",
+      "AssetFile": "C:\\Users\\quangdn13\\Desktop\\code\\ProjectManagementSystem\\wwwroot\\uploads\\tasks\\ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "16671"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 23 May 2025 08:56:17 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "r1ct2g5mch"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/tasks/ceaecd00-a6ba-454b-9ff7-3cf5a76e5261_tải xuống.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PzS3v0k3PvsPcw7i9XHwSFXtfk7EiH1ncYxsgLCUBTI="
         }
       ]
     },

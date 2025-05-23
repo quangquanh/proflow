@@ -128,7 +128,10 @@ namespace ProjectManagementSystem.Controllers
         {
             try
             {
-                // Debug ModelState
+                // Remove Projects and ProjectMembers from ModelState to prevent validation errors
+                ModelState.Remove("Projects");
+                ModelState.Remove("ProjectMembers");
+
                 if (!ModelState.IsValid)
                 {
                     var errors = string.Join("; ", ModelState.Values
@@ -194,6 +197,28 @@ namespace ProjectManagementSystem.Controllers
                     
                     // Send real-time notification
                     await NotificationService.SendRealTimeNotification(_hubContext, notification);
+
+                    // Send email notification for task assignment
+                    var assignedUser = await _userManager.FindByIdAsync(model.AssignedToId);
+                    if (assignedUser != null && !string.IsNullOrEmpty(assignedUser.Email))
+                    {
+                        var emailSubject = $"New Task Assignment: {model.Title}";
+                        var emailBody = $@"
+                            <h2>New Task Assignment</h2>
+                            <p>Hello {assignedUser.FirstName} {assignedUser.LastName},</p>
+                            <p>You have been assigned a new task:</p>
+                            <ul>
+                                <li><strong>Task:</strong> {model.Title}</li>
+                                <li><strong>Description:</strong> {model.Description}</li>
+                                <li><strong>Priority:</strong> {model.Priority}</li>
+                                <li><strong>Deadline:</strong> {model.Deadline:dd/MM/yyyy}</li>
+                                <li><strong>Assigned By:</strong> {currentUser.FirstName} {currentUser.LastName}</li>
+                            </ul>
+                            <p>You can view the task details by clicking <a href='{Url.Action("Details", "Task", new { id = task.Id }, Request.Scheme)}'>here</a>.</p>
+                            <p>Best regards,<br>Project Management System</p>";
+
+                        await _emailService.SendEmailAsync(assignedUser.Email, emailSubject, emailBody);
+                    }
                 }
 
                 // Then handle file upload
@@ -374,6 +399,26 @@ namespace ProjectManagementSystem.Controllers
                         
                         // Send real-time notification
                         await NotificationService.SendRealTimeNotification(_hubContext, notification);
+
+                        // Send email notification for status change
+                        if (task.AssignedTo != null && !string.IsNullOrEmpty(task.AssignedTo.Email))
+                        {
+                            var emailSubject = $"Task Status Update: {task.Title}";
+                            var emailBody = $@"
+                                <h2>Task Status Update</h2>
+                                <p>Hello {task.AssignedTo.FirstName} {task.AssignedTo.LastName},</p>
+                                <p>The status of your assigned task has been updated:</p>
+                                <ul>
+                                    <li><strong>Task:</strong> {task.Title}</li>
+                                    <li><strong>Old Status:</strong> {oldStatus}</li>
+                                    <li><strong>New Status:</strong> {task.Status}</li>
+                                    <li><strong>Updated By:</strong> {currentUser.FirstName} {currentUser.LastName}</li>
+                                </ul>
+                                <p>You can view the task details by clicking <a href='{Url.Action("Details", "Task", new { id = task.Id }, Request.Scheme)}'>here</a>.</p>
+                                <p>Best regards,<br>Project Management System</p>";
+
+                            await _emailService.SendEmailAsync(task.AssignedTo.Email, emailSubject, emailBody);
+                        }
                     }
                     
                     // Create notification if assignee changed
@@ -393,6 +438,49 @@ namespace ProjectManagementSystem.Controllers
                         
                         // Send real-time notification
                         await NotificationService.SendRealTimeNotification(_hubContext, notification);
+
+                        // Send email notification for task reassignment
+                        var newAssignee = await _userManager.FindByIdAsync(task.AssignedToId);
+                        if (newAssignee != null && !string.IsNullOrEmpty(newAssignee.Email))
+                        {
+                            var emailSubject = $"Task Reassignment: {task.Title}";
+                            var emailBody = $@"
+                                <h2>Task Reassignment</h2>
+                                <p>Hello {newAssignee.FirstName} {newAssignee.LastName},</p>
+                                <p>You have been assigned a task:</p>
+                                <ul>
+                                    <li><strong>Task:</strong> {task.Title}</li>
+                                    <li><strong>Description:</strong> {task.Description}</li>
+                                    <li><strong>Priority:</strong> {task.Priority}</li>
+                                    <li><strong>Deadline:</strong> {task.Deadline:dd/MM/yyyy}</li>
+                                    <li><strong>Assigned By:</strong> {currentUser.FirstName} {currentUser.LastName}</li>
+                                </ul>
+                                <p>You can view the task details by clicking <a href='{Url.Action("Details", "Task", new { id = task.Id }, Request.Scheme)}'>here</a>.</p>
+                                <p>Best regards,<br>Project Management System</p>";
+
+                            await _emailService.SendEmailAsync(newAssignee.Email, emailSubject, emailBody);
+                        }
+                    }
+
+                    // Send email notification for other task updates
+                    if (!statusChanged && !assigneeChanged && task.AssignedTo != null && !string.IsNullOrEmpty(task.AssignedTo.Email))
+                    {
+                        var emailSubject = $"Task Update: {task.Title}";
+                        var emailBody = $@"
+                            <h2>Task Update</h2>
+                            <p>Hello {task.AssignedTo.FirstName} {task.AssignedTo.LastName},</p>
+                            <p>Your assigned task has been updated:</p>
+                            <ul>
+                                <li><strong>Task:</strong> {task.Title}</li>
+                                <li><strong>Description:</strong> {task.Description}</li>
+                                <li><strong>Priority:</strong> {task.Priority}</li>
+                                <li><strong>Deadline:</strong> {task.Deadline:dd/MM/yyyy}</li>
+                                <li><strong>Updated By:</strong> {currentUser.FirstName} {currentUser.LastName}</li>
+                            </ul>
+                            <p>You can view the task details by clicking <a href='{Url.Action("Details", "Task", new { id = task.Id }, Request.Scheme)}'>here</a>.</p>
+                            <p>Best regards,<br>Project Management System</p>";
+
+                        await _emailService.SendEmailAsync(task.AssignedTo.Email, emailSubject, emailBody);
                     }
                     
                     await _context.SaveChangesAsync();
