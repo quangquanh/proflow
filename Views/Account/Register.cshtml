@@ -9,6 +9,28 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">@ViewData["Title"]</h2>
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <div class="d-grid gap-2 mb-4">
+                    <a asp-controller="Auth" asp-action="GoogleLogin" asp-route-returnUrl="@ViewData["ReturnUrl"]" 
+                       class="btn btn-google d-flex align-items-center justify-content-center gap-2">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google" class="google-icon" />
+                        <span>Đăng ký bằng Google</span>
+                    </a>
+                </div>
+
+                <div class="position-relative mb-4">
+                    <hr class="text-muted">
+                    <span class="position-absolute top-50 start-50 translate-middle px-3 bg-white text-muted">hoặc</span>
+                </div>
+
                 <form asp-action="Register" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     
@@ -50,13 +72,42 @@
                 </form>
             </div>
             <div class="card-footer text-center">
-                <p>
+                <p class="mb-0">
                     Đã có tài khoản? <a asp-action="Login">Đăng nhập</a>
                 </p>
             </div>
         </div>
     </div>
 </div>
+
+@section Styles {
+    <style>
+        .btn-google {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            color: #757575;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            height: 42px;
+        }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        hr {
+            margin: 0;
+            opacity: 0.15;
+        }
+    </style>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

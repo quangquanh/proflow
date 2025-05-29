@@ -62,13 +62,11 @@ C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Composition.TypedParts.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Drawing.Common.dll
-C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Formats.Asn1.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Memory.Data.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Runtime.Caching.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Security.Permissions.dll
-C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Text.Json.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\System.Windows.Extensions.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.resources.dll
@@ -288,12 +286,6 @@ C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\compres
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets.development.json
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets.build.endpoints.json
-C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets\msbuild.ProjectManagementSystem.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets\msbuild.ProjectManagementSystem.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets\msbuild.build.ProjectManagementSystem.props
-C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.ProjectManagementSystem.props
-C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.ProjectManagementSystem.props
-C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets.pack.json
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\ProjectM.457DAF1E.Up2Date
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\ProjectManagementSystem.dll
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\refint\ProjectManagementSystem.dll
@@ -312,3 +304,5 @@ C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\Project
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\ProjectManagementSystem.xml
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\compressed\mb714qhxcw-7faralo3uu.gz
 C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\ProjectManagementSystem.sourcelink.json
+C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.Google.dll
+C:\Users\quangdn13\Desktop\code\ProjectManagementSystem\obj\Debug\net9.0\staticwebassets.build.json.cache

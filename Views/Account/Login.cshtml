@@ -4,44 +4,228 @@
     ViewData["Title"] = "Đăng nhập";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="card-title text-center mb-4">@ViewData["Title"]</h2>
-                <form asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    
-                    <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Email</label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+<div class="auth-wrapper">
+    <div class="auth-background"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="text-center mb-4">
+                    <h1 class="auth-logo mb-2">ProFlow</h1>
+                    <p class="text-white-50">Chào mừng trở lại! Vui lòng đăng nhập để tiếp tục.</p>
+                </div>
+                <div class="auth-card">
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                @TempData["Error"]
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2 mb-4">
+                        <a asp-controller="Auth" asp-action="GoogleLogin" asp-route-returnUrl="@ViewData["ReturnUrl"]" 
+                           class="btn btn-google d-flex align-items-center justify-content-center gap-2">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google" class="google-icon" />
+                            <span>Đăng nhập bằng Google</span>
+                        </a>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label asp-for="Password" class="form-label">Mật khẩu</label>
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
+
+                    <div class="position-relative mb-4">
+                        <hr class="text-muted">
+                        <span class="divider-text">hoặc đăng nhập với Email</span>
                     </div>
-                    
-                    <div class="mb-3 form-check">
-                        <input asp-for="RememberMe" class="form-check-input" />
-                        <label asp-for="RememberMe" class="form-check-label">Ghi nhớ đăng nhập</label>
+
+                    <form asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                            <label asp-for="Email">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Password" class="form-control" placeholder="Mật khẩu" />
+                            <label asp-for="Password">Mật khẩu</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input asp-for="RememberMe" class="form-check-input" />
+                                <label asp-for="RememberMe" class="form-check-label">Ghi nhớ đăng nhập</label>
+                            </div>
+                            <a href="#" class="text-primary text-decoration-none">Quên mật khẩu?</a>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="text-muted mb-0">
+                            Chưa có tài khoản? 
+                            <a asp-action="Register" class="text-primary fw-medium">Đăng ký ngay</a>
+                        </p>
                     </div>
-                    
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Đăng nhập</button>
-                    </div>
-                </form>
-            </div>
-            <div class="card-footer text-center">
-                <p>
-                    Chưa có tài khoản? <a asp-action="Register">Đăng ký</a>
-                </p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Styles {
+    <style>
+        .auth-wrapper {
+            min-height: calc(100vh - var(--header-height));
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .auth-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            z-index: -1;
+        }
+
+        .auth-background::before {
+            content: '';
+            position: absolute;
+            width: 2000px;
+            height: 2000px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.07);
+            top: -1000px;
+            right: -1000px;
+        }
+
+        .auth-background::after {
+            content: '';
+            position: absolute;
+            width: 1500px;
+            height: 1500px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            bottom: -750px;
+            left: -750px;
+        }
+
+        .auth-logo {
+            color: #fff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .auth-card {
+            background: #fff;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.08);
+        }
+
+        .btn-google {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            height: 48px;
+            border-radius: 0.5rem;
+        }
+
+        .btn-google:hover {
+            background-color: #f9fafb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transform: translateY(-1px);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .divider-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 0 1rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        hr {
+            margin: 0;
+            opacity: 0.15;
+        }
+
+        .form-floating > .form-control {
+            border-radius: 0.5rem;
+            border-color: #e5e7eb;
+            padding: 1rem;
+            height: calc(3.5rem + 2px);
+            line-height: 1.25;
+        }
+
+        .form-floating > label {
+            padding: 1rem;
+        }
+
+        .form-check-input:checked {
+            background-color: #6366f1;
+            border-color: #6366f1;
+        }
+
+        .btn-primary {
+            background-color: #6366f1;
+            border-color: #6366f1;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.12);
+        }
+
+        .alert {
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+        .alert-danger {
+            background-color: #fef2f2;
+            color: #dc2626;
+        }
+
+        .text-primary {
+            color: #6366f1 !important;
+        }
+
+        .fw-medium {
+            font-weight: 500;
+        }
+    </style>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

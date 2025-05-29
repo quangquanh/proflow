@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Đăng nhập";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold">@ViewData["Title"]</h2>
+                        <p class="text-muted">Chào mừng bạn đến với hệ thống quản lý dự án</p>
+                    </div>
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <div class="d-grid gap-3">
+                        <a asp-action="GoogleLogin" asp-route-returnUrl="@ViewData["ReturnUrl"]" 
+                           class="btn btn-google btn-lg d-flex align-items-center justify-content-center gap-2">
+                            <img src="~/images/google-icon.png" alt="Google" class="google-icon" />
+                            <span>Đăng nhập bằng Google</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .btn-google {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            color: #757575;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+    </style>
+} 

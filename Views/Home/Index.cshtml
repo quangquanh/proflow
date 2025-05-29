@@ -6,22 +6,28 @@
     <!-- Welcome Section -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card bg-gradient-primary text-white border-0 shadow">
+            <div class="welcome-card position-relative overflow-hidden">
                 <div class="card-body p-5">
                     <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h1 class="display-5 fw-bold mb-3">Chào mừng đến với ProFlow</h1>
-                            <p class="lead mb-4">Tối ưu quy trình làm việc, tăng cường hợp tác và đạt thành công dự án với nền tảng quản lý toàn diện của chúng tôi.</p>
+                        <div class="col-lg-8 position-relative z-index-1">
+                            <span class="badge bg-white text-primary mb-3 px-3 py-2">
+                                <i class="fas fa-chart-line me-2"></i>Quản lý dự án thông minh
+                            </span>
+                            <h1 class="display-4 text-white fw-bold mb-3">Chào mừng đến với ProFlow</h1>
+                            <p class="lead text-white-75 mb-4">Tối ưu quy trình làm việc, tăng cường hợp tác và đạt thành công dự án với nền tảng quản lý toàn diện của chúng tôi.</p>
                             @if (User.Identity.IsAuthenticated)
                             {
-                                <a asp-controller="Project" asp-action="Create" class="btn btn-light btn-lg px-4">
+                                <a asp-controller="Project" asp-action="Create" class="btn btn-light btn-lg px-4 me-2 shadow-sm">
                                     <i class="fas fa-plus me-2"></i>Tạo dự án mới
+                                </a>
+                                <a asp-controller="Project" asp-action="Index" class="btn btn-outline-light btn-lg px-4">
+                                    <i class="fas fa-project-diagram me-2"></i>Xem dự án
                                 </a>
                             }
                             else
                             {
                                 <div class="d-flex gap-3">
-                                    <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg px-4">
+                                    <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg px-4 shadow-sm">
                                         <i class="fas fa-user-plus me-2"></i>Bắt đầu ngay
                                     </a>
                                     <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg px-4">
@@ -29,11 +35,31 @@
                                     </a>
                                 </div>
                             }
-                        </div>
-                        <div class="col-md-4 d-none d-md-block">
+                            <div class="mt-5 d-flex gap-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="stat-circle bg-white text-primary me-2">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white mb-0">10K+</h4>
+                                        <p class="text-white-75 mb-0">Người dùng tin tưởng</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="stat-circle bg-white text-primary me-2">
+                                        <i class="fas fa-project-diagram"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-white mb-0">50K+</h4>
+                                        <p class="text-white-75 mb-0">Dự án đã hoàn thành</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="welcome-shape-1"></div>
+                <div class="welcome-shape-2"></div>
             </div>
         </div>
     </div>
@@ -42,69 +68,117 @@
     {
         <!-- Quick Stats -->
         <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="card h-100 border-0 shadow-sm hover-shadow">
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-0 h-100">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="bg-primary bg-opacity-10 p-3 rounded-3">
-                                    <i class="fas fa-project-diagram text-primary fa-2x"></i>
+                            <div class="stat-icon bg-primary-subtle text-primary">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <div class="ms-3">
+                                <p class="text-muted mb-1">Dự án đang hoạt động</p>
+                                <div class="d-flex align-items-baseline">
+                                    <h3 class="mb-0">@(ViewBag.ActiveProjectsCount ?? 12)</h3>
+                                    <span class="badge bg-success-subtle text-success ms-2">
+                                        <i class="fas fa-arrow-up me-1"></i>8.5%
+                                    </span>
                                 </div>
                             </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1">Dự án đang hoạt động</h6>
-                                <h3 class="mb-0 fw-bold">@(ViewBag.ActiveProjectsCount ?? 0)</h3>
+                        </div>
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="text-muted">Tiến độ tháng này</small>
+                                <small class="text-muted">85%</small>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 85%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card h-100 border-0 shadow-sm hover-shadow">
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-0 h-100">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="bg-success bg-opacity-10 p-3 rounded-3">
-                                    <i class="fas fa-tasks text-success fa-2x"></i>
+                            <div class="stat-icon bg-success-subtle text-success">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="ms-3">
+                                <p class="text-muted mb-1">Tổng số công việc</p>
+                                <div class="d-flex align-items-baseline">
+                                    <h3 class="mb-0">@(ViewBag.TotalTasksCount ?? 156)</h3>
+                                    <span class="badge bg-success-subtle text-success ms-2">
+                                        <i class="fas fa-arrow-up me-1"></i>12.4%
+                                    </span>
                                 </div>
                             </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1">Tổng số công việc</h6>
-                                <h3 class="mb-0 fw-bold">@(ViewBag.TotalTasksCount ?? 0)</h3>
+                        </div>
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="text-muted">Hoàn thành</small>
+                                <small class="text-muted">92%</small>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 92%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card h-100 border-0 shadow-sm hover-shadow">
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-0 h-100">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="bg-warning bg-opacity-10 p-3 rounded-3">
-                                    <i class="fas fa-users text-warning fa-2x"></i>
+                            <div class="stat-icon bg-warning-subtle text-warning">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="ms-3">
+                                <p class="text-muted mb-1">Nhóm đang hoạt động</p>
+                                <div class="d-flex align-items-baseline">
+                                    <h3 class="mb-0">@(ViewBag.ActiveTeamsCount ?? 8)</h3>
+                                    <span class="badge bg-success-subtle text-success ms-2">
+                                        <i class="fas fa-arrow-up me-1"></i>5.2%
+                                    </span>
                                 </div>
                             </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1">Nhóm đang hoạt động</h6>
-                                <h3 class="mb-0 fw-bold">@(ViewBag.ActiveTeamsCount ?? 0)</h3>
+                        </div>
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="text-muted">Hiệu suất</small>
+                                <small class="text-muted">78%</small>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 78%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card h-100 border-0 shadow-sm hover-shadow">
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-0 h-100">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
-                                <div class="bg-info bg-opacity-10 p-3 rounded-3">
-                                    <i class="fas fa-user-friends text-info fa-2x"></i>
+                            <div class="stat-icon bg-info-subtle text-info">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <div class="ms-3">
+                                <p class="text-muted mb-1">Thành viên nhóm</p>
+                                <div class="d-flex align-items-baseline">
+                                    <h3 class="mb-0">@(ViewBag.TotalMembersCount ?? 24)</h3>
+                                    <span class="badge bg-success-subtle text-success ms-2">
+                                        <i class="fas fa-arrow-up me-1"></i>15.3%
+                                    </span>
                                 </div>
                             </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="text-muted mb-1">Thành viên nhóm</h6>
-                                <h3 class="mb-0 fw-bold">@(ViewBag.TotalMembersCount ?? 0)</h3>
+                        </div>
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="text-muted">Hoạt động</small>
+                                <small class="text-muted">95%</small>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 95%"></div>
                             </div>
                         </div>
                     </div>
@@ -319,41 +393,217 @@
     else
     {
         <!-- Landing content for non-authenticated users -->
-        <div class="row mt-5">
-            <div class="col-md-6">
-                <h1 class="display-4 fw-bold mb-4">Quản lý dự án dễ dàng</h1>
-                <p class="lead mb-4">Quản lý công việc, hợp tác với thành viên và theo dõi tiến độ chỉ trong một nền tảng. ProFlow giúp bạn tổ chức và đạt mục tiêu dự án hiệu quả.</p>
-                <div class="mt-4">
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-4 me-3">
+        <div class="row mt-5 align-items-center">
+            <div class="col-lg-6">
+                <span class="badge bg-primary-subtle text-primary mb-3 px-3 py-2">
+                    <i class="fas fa-rocket me-2"></i>Nền tảng quản lý dự án #1 Việt Nam
+                </span>
+                <h1 class="display-4 fw-bold mb-4">Quản lý dự án thông minh & hiệu quả</h1>
+                <p class="lead text-muted mb-4">Quản lý công việc, hợp tác với thành viên và theo dõi tiến độ chỉ trong một nền tảng. ProFlow giúp bạn tổ chức và đạt mục tiêu dự án hiệu quả.</p>
+                <div class="mb-5">
+                    <div class="d-flex gap-4 mb-4">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-primary-subtle text-primary me-3">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Giao diện trực quan</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-primary-subtle text-primary me-3">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Dễ dàng sử dụng</span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-4">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-primary-subtle text-primary me-3">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Hỗ trợ 24/7</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon bg-primary-subtle text-primary me-3">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span>Bảo mật tuyệt đối</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-3">
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-4 shadow-sm">
                         <i class="fas fa-user-plus me-2"></i>Bắt đầu ngay
                     </a>
                     <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg px-4">
                         <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
                     </a>
                 </div>
+                <div class="mt-5 d-flex gap-5">
+                    <div class="text-center">
+                        <h3 class="fw-bold mb-0">10K+</h3>
+                        <p class="text-muted">Người dùng</p>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="fw-bold mb-0">50K+</h3>
+                        <p class="text-muted">Dự án</p>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="fw-bold mb-0">95%</h3>
+                        <p class="text-muted">Hài lòng</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 text-center">
+            <div class="col-lg-6 d-none d-lg-block text-center">
+              
             </div>
         </div>
     }
 </div>
 
 <style>
-    .bg-gradient-primary {
-        background: linear-gradient(45deg, #4e73df 0%, #224abe 100%);
+    .welcome-card {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        border-radius: 1rem;
+        border: none;
+    }
+
+    .welcome-shape-1,
+    .welcome-shape-2 {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .welcome-shape-1 {
+        width: 300px;
+        height: 300px;
+        top: -100px;
+        right: -100px;
+    }
+
+    .welcome-shape-2 {
+        width: 200px;
+        height: 200px;
+        bottom: -50px;
+        right: 50px;
+    }
+
+    .text-white-75 {
+        color: rgba(255, 255, 255, 0.75) !important;
+    }
+
+    .stat-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .stat-card {
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .feature-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress {
+        background-color: #e9ecef;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        border-radius: 1rem;
+    }
+
+    .bg-primary-subtle {
+        background-color: rgba(99, 102, 241, 0.1) !important;
+    }
+
+    .bg-success-subtle {
+        background-color: rgba(16, 185, 129, 0.1) !important;
+    }
+
+    .bg-warning-subtle {
+        background-color: rgba(245, 158, 11, 0.1) !important;
+    }
+
+    .bg-info-subtle {
+        background-color: rgba(59, 130, 246, 0.1) !important;
+    }
+
+    .text-primary {
+        color: #6366f1 !important;
+    }
+
+    .text-success {
+        color: #10b981 !important;
+    }
+
+    .text-warning {
+        color: #f59e0b !important;
+    }
+
+    .text-info {
+        color: #3b82f6 !important;
+    }
+
+    .btn-primary {
+        background-color: #6366f1;
+        border-color: #6366f1;
+    }
+
+    .btn-primary:hover {
+        background-color: #4f46e5;
+        border-color: #4f46e5;
+    }
+
+    .btn-outline-primary {
+        color: #6366f1;
+        border-color: #6366f1;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #6366f1;
+        border-color: #6366f1;
     }
 
     .avatar {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
         background-color: #e9ecef;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.875rem;
+        font-size: 1rem;
         font-weight: 500;
-        color: #495057;
+        color: #6366f1;
         margin-right: -8px;
         border: 2px solid #fff;
         transition: transform 0.2s;
@@ -363,37 +613,9 @@
         transform: translateY(-2px);
     }
 
-    .avatar-group {
-        display: flex;
-        align-items: center;
-    }
-
-    .progress {
-        background-color: #e9ecef;
-        border-radius: 0.5rem;
-    }
-
-    .card {
-        border: none;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .hover-shadow:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    }
-
     .table > :not(caption) > * > * {
         padding: 1rem 1.5rem;
-    }
-
-    .btn-group .btn {
-        padding: 0.5rem 1rem;
-    }
-
-    .badge {
-        font-weight: 500;
+        border-bottom-color: #f3f4f6;
     }
 
     .table thead th {
@@ -401,9 +623,13 @@
         text-transform: uppercase;
         font-size: 0.75rem;
         letter-spacing: 0.5px;
+        color: #6b7280;
+        background-color: #f9fafb;
+        border-bottom: none;
     }
 
-    .fw-medium {
+    .badge {
         font-weight: 500;
+        letter-spacing: 0.5px;
     }
 </style>
